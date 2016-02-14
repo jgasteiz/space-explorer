@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-server-livereload": "^1.7.0"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/h5bp/html5-boilerplate/blob/master/LICENSE.txt"
+  },
+  "name": "phaser-test",
+  "private": true,
+  "version": "5.3.0"
+}
