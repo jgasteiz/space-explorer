@@ -1,134 +1,62 @@
-// (function () {
-    var player,
-        invaders,
-        cursors,
-        bulletsGroup,
-        bullets = [];
+window.SI = window.SI || {};
 
-    var config = {
-        width: 800,
-        height: 600,
-        bulletSpeed: 8,
-        fireDelay: 300,
-        numInvaders: 8
-    };
+(function () {
 
-    // Tween for storing the player animation
-    var playerTween;
-    var playerRotationTween;
+    function initialize () {
+        SI.config = {
+            width: 800,
+            height: 600,
+            bulletSpeed: 8,
+            fireDelay: 300,
+            numInvaders: 8
+        };
 
-    var starfield;
+        SI.game = new Phaser.Game(SI.config.width, SI.config.height, Phaser.AUTO, 'container', {
+            preload: preload,
+            create: create,
+            update: update,
+            render: render
+        });
+    }
 
-    var game = new Phaser.Game(config.width, config.height, Phaser.WEB_GL, 'container', {
-        preload: preload,
-        create: create,
-        update: update
-    });
+    initialize();
 
     /**
      * Preload
      */
     function preload () {
-        game.load.image('space', 'img/space_invaders/space.png');
-        game.load.image('bullet', 'img/space_invaders/bullet.gif');
-        game.load.image('spaceship', 'img/space_invaders/spaceship.png');
-        game.load.image('invader', 'img/space_invaders/invader.png');
+        SI.game.load.image('space', 'img/space_invaders/space.png');
+        SI.game.load.image('bullet', 'img/space_invaders/bullet.gif');
+        SI.game.load.image('spaceship', 'img/space_invaders/spaceship.png');
+        SI.game.load.image('invader', 'img/space_invaders/invader.png');
     }
 
     /**
      * Create
      */
     function create () {
-        createGame();
-        createPlayer();
-        createBullets();
-        createInvaders();
+        // Create game
+        SI.game.world.setBounds(0, 0, SI.config.width, SI.config.height);
+        SI.game.physics.startSystem(Phaser.Physics.ARCADE);
+        SI.game.starfield = SI.game.add.tileSprite(0, 0, 800, 600, 'space');
 
-        // Add cursors
-        cursors = game.input.keyboard.createCursorKeys();
-        cursors.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    }
+        // Create spaceship
+        SI.spaceship = SI.game.add.sprite(SI.config.width / 2, SI.config.height - 60, 'spaceship');
+        SI.spaceship.anchor.setTo(0.5);
+        SI.game.physics.arcade.enable(SI.spaceship);
+        SI.spaceship.body.collideWorldBounds = true;
+        SI.spaceship.initializeSpaceship();
 
-    /**
-     * Initialize the game, ground and platforms.
-     */
-    function createGame () {
-        game.world.setBounds(0, 0, config.width, config.height);
-        //We're going to be using physics, so enable the Arcade Physics system
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        starfield = game.add.tileSprite(0, 0, 800, 600, 'space');
-    }
-
-    /**
-     * Initialize the player and its properties
-     */
-    function createPlayer () {
-        player = game.add.sprite(config.width / 2, config.height - 60, 'spaceship');
-        player.anchor.setTo(.5,.5);
-        game.physics.arcade.enable(player);
-
-        player.body.collideWorldBounds = true;
-
-        game.input.onDown.add(moveSpaceship, this);
-    }
-
-    function moveSpaceship(pointer) {
-        if (playerTween && playerTween.isRunning) {
-            playerTween.stop();
-        }
-
-        if (playerRotationTween && playerRotationTween.isRunning) {
-            playerRotationTween.stop();
-        }
-
-        var duration = (game.physics.arcade.distanceToXY(player, pointer.x, pointer.y) / 300) * 1000;
-
-        playerTween = game.add.tween(player).to({
-            x: pointer.x,
-            y: pointer.y,
-        }, duration, Phaser.Easing.Sinusoidal.InOut, true);
-
-        // Calculate the angle between the two points and the Y axis.
-        var angle = (Math.atan2(pointer.y - player.y, pointer.x - player.x) * 180 / Math.PI) + 90
-
-        // If the angle is negative, turn it into 360 based.
-        if (angle < 0) {
-            angle = 360 + angle;
-        }
-
-        // Calculate the angle to rotate.
-        var diffAngle = parseInt(angle - player.angle, 10) % 360;
-
-        // If we're going to turn more than 180 degrees, turn anti-clockwise.
-        if (diffAngle > 180) {
-            diffAngle = -(360 - diffAngle);
-        }
-
-        // Format it to a string with either `+` or `-`.
-        diffAngle = diffAngle > 0 ? '+' + String(diffAngle) : '-' + String(Math.abs(diffAngle));
-
-        // Rotate the player.
-        playerRotationTween = game.add.tween(player).to({angle: diffAngle}, 300, Phaser.Easing.Linear.None, true, 100);
-    }
-
-    function createBullets () {
-        bulletsGroup = game.add.group();
-        bulletsGroup.enableBody = true;
-    }
-
-    function createInvaders () {
-        var spawnWidth = config.width - 100;
-
-        invaders = game.add.group();
-        invaders.enableBody = true;
-
-        for (var i = 0; i < config.numInvaders; i++) {
-            var initialX = i * spawnWidth / config.numInvaders + 50,
-                invader = invaders.create(initialX + 30, 80, 'invader');
+        // Create some invaders
+        var spawnWidth = SI.config.width - 100;
+        SI.game.invaders = SI.game.add.group();
+        SI.game.invaders.enableBody = true;
+        for (var i = 0; i < SI.config.numInvaders; i++) {
+            var initialX = i * spawnWidth / SI.config.numInvaders + 50,
+                invader = SI.game.invaders.create(initialX + 30, 80, 'invader');
 
             invader.anchor.setTo(.5, .5);
-            game.physics.arcade.enable(invader);
+            SI.game.physics.arcade.enable(invader);
             invader.body.collideWorldBounds = true;
         }
     }
@@ -137,60 +65,28 @@
      * Update.
      */
     function update () {
-        starfield.tilePosition.y += 2;
+        // Move the starfield
+        SI.game.starfield.tilePosition.y += 0.5;
 
-        // Update the bullets position.
-        // updateBullets();
-        if (cursors.fire.isDown) {
-            fire();
+        // Listen for mouse input and update the spaceship.
+        if (SI.game.input.activePointer.isDown && SI.game.input.activePointer.isMouse) {
+            var mousePointer = SI.game.input.mousePointer;
+            if (SI.game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
+                SI.spaceship.fireToPointer(mousePointer);
+            } else if (SI.game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
+                SI.spaceship.moveToPointer(mousePointer);
+            }
         }
 
-        // Update the player position
-        updatePlayer();
-
-        // Update the invaders position
-        updateInvaders();
-    }
-
-    function fire () {
-        // bullets.forEach(function(bullet) {
-        //     bullet.sprite.y -= config.bulletSpeed;
-        // });
-
-        var lastBullet = bullets[bullets.length - 1];
-        var lastDate = lastBullet ? lastBullet.date + config.fireDelay : 0;
-
-        if (lastDate < new Date().getTime()) {
-            var bullet = bulletsGroup.create(player.position.x, player.position.y, 'bullet');
-            bullet.scale.setTo(2, 2);
-            bullet.rotation = player.rotation;
-
-            bullets.push({
-                sprite: bullet,
-                angle: player.angle,
-                date: new Date().getTime()
-            });
-
-            bullet.body.velocity.x = Math.cos(bullet.rotation + 4.7) * 300;
-            bullet.body.velocity.y = Math.sin(bullet.rotation + 4.7) * 300;
-        }
-    }
-
-    function updatePlayer () {
-        player.body.velocity.x = 0;
-        if (cursors.left.isDown) {
-            player.body.velocity.x = -300;
-        } else if (cursors.right.isDown) {
-            player.body.velocity.x = 300;
-        } else {
-            player.animations.stop();
-        }
-    }
-
-    function updateInvaders () {
-        game.physics.arcade.overlap(bulletsGroup, invaders, function (bullet, invader) {
+        // Update the invaders.
+        SI.game.physics.arcade.overlap(SI.spaceship.bulletsGroup, SI.game.invaders, function (bullet, invader) {
             invader.kill();
         }, null, this);
     }
 
-// })();
+    function render () {
+        SI.game.debug.text(SI.game.time.fps || '--', 2, 14, "#00ff00");
+        SI.game.debug.text(Phaser.VERSION, SI.game.world.width - 55, 14, "#ffff00");
+    }
+
+})();
