@@ -12,14 +12,19 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
      * @constructor
      */
     var Spaceship = function (game, x, y, sprite) {
-        Phaser.Sprite.call(this, game, x, y, sprite);
-
         var self = this;
+
+        Phaser.Sprite.call(self, game, x, y, sprite);
 
         self.tweens = [];
         self.bullets = [];
         self.bulletsGroup = self.game.add.group();
         self.bulletsGroup.enableBody = true;
+        self.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
+        self.bulletsGroup.setAll('anchor.x', 0.5);
+        self.bulletsGroup.setAll('anchor.y', 0.5);
+        self.bulletsGroup.setAll('outOfBoundsKill', true);
+        self.bulletsGroup.setAll('checkWorldBounds', true);
 
         self.anchor.setTo(0.5);
         game.physics.arcade.enable(self);
@@ -46,15 +51,15 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         });
         self.tweens = [];
 
-        var duration = parseInt((this.game.physics.arcade.distanceToXY(self, pointer.x, pointer.y) / 300) * 1000, 10);
+        var duration = parseInt((self.game.physics.arcade.distanceToXY(self, pointer.x, pointer.y) / 300) * 1000, 10);
 
-        self.tweens.push(this.game.add.tween(self).to({
+        self.tweens.push(self.game.add.tween(self).to({
             x: pointer.x,
             y: pointer.y
         }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true));
 
         // Rotate the player.
-        self.tweens.push(this.game.add.tween(self).to({
+        self.tweens.push(self.game.add.tween(self).to({
             angle: _getRotationAngle(self, pointer)
         }, 300, Phaser.Easing.Linear.None, true, 100));
     };
@@ -78,7 +83,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
                 date: new Date().getTime()
             });
 
-            this.game.physics.arcade.moveToXY(bullet, pointer.x, pointer.y, 300, null);
+            self.game.physics.arcade.moveToPointer(bullet, config.fireSpeed, pointer, null);
         }
     };
 
@@ -90,7 +95,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
      */
     function _getFinalAngle (sprite, destination) {
         // Calculate the angle between the two points and the Y axis.
-        var angle = (Math.atan2(destination.y - sprite.y, destination.x - sprite.x) * 180 / Math.PI) + 90
+        var angle = (Math.atan2(destination.y - sprite.y, destination.x - sprite.x) * 180 / Math.PI) + 90;
 
         // If the angle is negative, turn it into 360 based.
         if (angle < 0) {

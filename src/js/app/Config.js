@@ -6,7 +6,8 @@ define(function () {
                 width: 980,
                 height: 720,
                 bulletSpeed: 8,
-                fireDelay: 300,
+                fireDelay: 200,
+                fireSpeed: 600,
                 numAliens: 8
             }
         }
