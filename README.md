@@ -1,5 +1,13 @@
-# Phaser js test
+# Space Explorer
 
-Clone (in progress) of Metal Slug 1 (First mission) with [Phaser js](http://phaser.io/).
+Point and click space action game.
 
-Assets and some code taken from [zzarcon/html5-slug](https://github.com/zzarcon/html5-slug).
+First attempt of learning Phaser.
+
+Some assets taken from the [Phaser Examples Github respository](https://github.com/photonstorm/phaser-examples).
+
+## Running it locally
+
+- `bower install`
+- `npm install`
+- `gulp webserver`
