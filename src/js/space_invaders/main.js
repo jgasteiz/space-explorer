@@ -29,6 +29,7 @@ window.SI = window.SI || {};
         SI.game.load.image('bullet', 'img/space_invaders/bullet.gif');
         SI.game.load.image('spaceship', 'img/space_invaders/spaceship.png');
         SI.game.load.image('invader', 'img/space_invaders/invader.png');
+        SI.game.time.advancedTiming = true;
     }
 
     /**
