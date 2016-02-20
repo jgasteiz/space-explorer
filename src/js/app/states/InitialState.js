@@ -27,7 +27,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
     function preload () {
         game.load.image('space', 'img/space.png');
         game.load.image('bullet', 'img/bullet.png');
-        game.load.image('spaceship', 'img/spaceship.png');
+        game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 64, 90, 4);
         game.load.image('alien', 'img/invader.png');
         game.load.spritesheet('explosion', 'img/explode.png', 128, 128);
         game.time.advancedTiming = true;

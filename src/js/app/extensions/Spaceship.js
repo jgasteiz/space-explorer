@@ -31,6 +31,9 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         self.body.collideWorldBounds = true;
 
         game.add.existing(self);
+
+        self.animations.add('move', [1,2,3]);
+        self.animations.add('standby', [0]);
     };
 
     Spaceship.prototype = Object.create(Phaser.Sprite.prototype);
@@ -43,7 +46,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
     Spaceship.prototype.moveToPointer = function (pointer) {
         var self = this;
 
-        // Stop animations
+        // Stop tweens
         self.tweens.forEach(function (tween) {
             if (tween.isRunning) {
                 tween.stop();
@@ -51,12 +54,22 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         });
         self.tweens = [];
 
+        // Start move animation.
+        self.animations.play('move', 10, true);
+
         var duration = parseInt((self.game.physics.arcade.distanceToXY(self, pointer.x, pointer.y) / 300) * 1000, 10);
 
-        self.tweens.push(self.game.add.tween(self).to({
+        var movingTween = self.game.add.tween(self).to({
             x: pointer.x,
             y: pointer.y
-        }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true));
+        }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true);
+
+        // Set to standby when the moving animation is done.
+        movingTween.onComplete.add(function () {
+            self.animations.play('standby');
+        }, this);
+
+        self.tweens.push(movingTween);
 
         // Rotate the player.
         self.tweens.push(self.game.add.tween(self).to({
