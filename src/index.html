@@ -3,18 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Phaser Slug</title>
+        <title>Space Explorer</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body oncontextmenu="return false;">
-        <div id="container"></div>
+        <div role="main" id="container" class="game-container"></div>
 
-        <script src="vendor/phaser/build/phaser.js"></script>
-
-        <script src="js/space_invaders/player.js"></script>
-        <script src="js/space_invaders/main.js"></script>
+        <script data-main="js/app" src="vendor/requirejs/require.js"></script>
     </body>
 </html>

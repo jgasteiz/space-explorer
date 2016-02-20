@@ -1,17 +1,26 @@
-(function () {
+define(['Phaser', 'Config'], function (Phaser, Config) {
 
-    Phaser.Sprite.prototype.initializeSpaceship = function () {
+    var config = Config.getConfig();
+
+    var Spaceship = function (game, x, y, sprite) {
+        Phaser.Sprite.call(this, game, x, y, sprite);
+
         this.tweens = [];
         this.bullets = [];
         this.bulletsGroup = this.game.add.group();
         this.bulletsGroup.enableBody = true;
+
+        game.add.existing(this);
     };
+
+    Spaceship.prototype = Object.create(Phaser.Sprite.prototype);
+    Spaceship.prototype.constructor = Spaceship;
 
     /**
      * Method that moves the player to a given pointer.
      * @param pointer
      */
-    Phaser.Sprite.prototype.moveToPointer = function (pointer) {
+    Spaceship.prototype.moveToPointer = function (pointer) {
         var self = this;
 
         // Stop animations
@@ -39,11 +48,11 @@
      * Fire a bullet towards the given pointer.
      * @param pointer
      */
-    Phaser.Sprite.prototype.fireToPointer = function (pointer) {
+    Spaceship.prototype.fireToPointer = function (pointer) {
         var self = this;
 
         var lastBullet = self.bullets[self.bullets.length - 1];
-        var lastDate = lastBullet ? lastBullet.date + SI.config.fireDelay : 0;
+        var lastDate = lastBullet ? lastBullet.date + config.fireDelay : 0;
 
         if (lastDate < new Date().getTime()) {
             var bullet = self.bulletsGroup.create(self.position.x, self.position.y, 'bullet');
@@ -99,4 +108,6 @@
 
         return String(rotationAngle);
     }
-})();
+
+    Phaser.Spaceship = Spaceship;
+});
