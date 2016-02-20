@@ -2,15 +2,30 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
 
     var config = Config.getConfig();
 
+    /**
+     * Spaceship constructor method.
+     * Initialise the sprite, the bullets and add the sprite to the game.
+     * @param game
+     * @param x
+     * @param y
+     * @param sprite
+     * @constructor
+     */
     var Spaceship = function (game, x, y, sprite) {
         Phaser.Sprite.call(this, game, x, y, sprite);
 
-        this.tweens = [];
-        this.bullets = [];
-        this.bulletsGroup = this.game.add.group();
-        this.bulletsGroup.enableBody = true;
+        var self = this;
 
-        game.add.existing(this);
+        self.tweens = [];
+        self.bullets = [];
+        self.bulletsGroup = self.game.add.group();
+        self.bulletsGroup.enableBody = true;
+
+        self.anchor.setTo(0.5);
+        game.physics.arcade.enable(self);
+        self.body.collideWorldBounds = true;
+
+        game.add.existing(self);
     };
 
     Spaceship.prototype = Object.create(Phaser.Sprite.prototype);
@@ -40,7 +55,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
 
         // Rotate the player.
         self.tweens.push(this.game.add.tween(self).to({
-            angle: getRotationAngle(self, pointer)
+            angle: _getRotationAngle(self, pointer)
         }, 300, Phaser.Easing.Linear.None, true, 100));
     };
 
@@ -56,7 +71,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
 
         if (lastDate < new Date().getTime()) {
             var bullet = self.bulletsGroup.create(self.position.x, self.position.y, 'bullet');
-            bullet.angle = getFinalAngle(bullet, pointer);
+            bullet.angle = _getFinalAngle(bullet, pointer);
 
             self.bullets.push({
                 sprite: bullet,
@@ -73,7 +88,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
      * @param sprite
      * @param destination
      */
-    function getFinalAngle (sprite, destination) {
+    function _getFinalAngle (sprite, destination) {
         // Calculate the angle between the two points and the Y axis.
         var angle = (Math.atan2(destination.y - sprite.y, destination.x - sprite.x) * 180 / Math.PI) + 90
 
@@ -92,8 +107,8 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
      * @param destination
      * @returns {string}
      */
-    function getRotationAngle (sprite, destination) {
-        var angle = getFinalAngle(sprite, destination);
+    function _getRotationAngle (sprite, destination) {
+        var angle = _getFinalAngle(sprite, destination);
 
         // Calculate the angle to rotate.
         var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
