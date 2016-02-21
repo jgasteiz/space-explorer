@@ -15,7 +15,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
     var Alien = function (game, x, y, sprite, explosions) {
         var self = this;
 
-        Phaser.Sprite.call(self, game, x, y, sprite);
+        Phaser.Character.call(self, game, x, y, sprite);
 
         self.explosions = explosions;
         self.animations.add('explosion');
@@ -23,10 +23,12 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         game.physics.arcade.enable(self);
         self.body.collideWorldBounds = true;
 
+        self.speed = 200;
+
         game.add.existing(this);
     };
 
-    Alien.prototype = Object.create(Phaser.Sprite.prototype);
+    Alien.prototype = Object.create(Phaser.Character.prototype);
     Alien.prototype.constructor = Alien;
 
     /**
@@ -60,11 +62,18 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         for (var i = 0; i < config.numAliens; i++) {
             var initialX = i * (config.width - 100) / config.numAliens + 50;
             var alien = new Phaser.Alien(game, initialX + 30, 80, 'alien', explosions);
+            alien.angle = 180;
 
             // If a group was specified, add the alien to the group.
             if (group) {
                 group.add(alien);
             }
+
+            // Move the alien
+            alien.moveToXY(
+                Math.floor(Math.random() * config.width - 100) + 100,
+                Math.floor(Math.random() * config.height - 100) + 100
+            );
         }
     };
 

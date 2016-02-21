@@ -8,7 +8,7 @@ define(function () {
                 bulletSpeed: 8,
                 fireDelay: 200,
                 fireSpeed: 600,
-                numAliens: 8
+                numAliens: 4
             }
         }
     };

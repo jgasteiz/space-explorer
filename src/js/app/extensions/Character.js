@@ -1,6 +1,4 @@
-define(['Phaser', 'Config'], function (Phaser, Config) {
-
-    var config = Config.getConfig();
+define(['Phaser'], function (Phaser) {
 
     /**
      * Character constructor method.
@@ -18,6 +16,8 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
 
         self.tweens = [];
 
+        self.speed = 300;
+
         self.anchor.setTo(0.5);
         game.physics.arcade.enable(self);
         self.body.collideWorldBounds = true;
@@ -29,10 +29,11 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
     Character.prototype.constructor = Character;
 
     /**
-     * Method that moves the character to a given pointer.
-     * @param pointer
+     * Method that moves the character to a given x y.
+     * @param x
+     * @param y
      */
-    Character.prototype.moveToPointer = function (pointer) {
+    Character.prototype.moveToXY = function (x, y) {
         var self = this;
 
         // Stop tweens
@@ -43,23 +44,33 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         });
         self.tweens = [];
 
-        var duration = parseInt((self.game.physics.arcade.distanceToXY(self, pointer.x, pointer.y) / 300) * 1000, 10);
+        var duration = parseInt((self.game.physics.arcade.distanceToXY(self, x, y) / self.speed) * 1000, 10);
 
         // Move the character.
         var movementTween = self.game.add.tween(self).to({
-            x: pointer.x,
-            y: pointer.y
+            x: x,
+            y: y
         }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true);
         movementTween.onComplete.add(self.onCompleteMovement, self);
 
         // Rotate the character.
         var rotationTween = self.game.add.tween(self).to({
-            angle: self.getRotationAngle(self, pointer)
+            angle: self.getRotationAngle(self, {x: x, y: y})
         }, 300, Phaser.Easing.Linear.None, true, 100);
         rotationTween.onComplete.add(self.onCompleteRotation, self);
 
         self.tweens.push(movementTween);
         self.tweens.push(rotationTween);
+    };
+
+    /**
+     * Method that moves the character to a given pointer.
+     * @param pointer
+     */
+    Character.prototype.moveToPointer = function (pointer) {
+        var self = this;
+
+        self.moveToXY(pointer.x, pointer.y);
     };
 
     /**
@@ -98,7 +109,9 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
      * @returns {string}
      */
     Character.prototype.getRotationAngle = function (sprite, destination) {
-        var angle = this.getFinalAngle(sprite, destination);
+        var self = this;
+
+        var angle = self.getFinalAngle(sprite, destination);
 
         // Calculate the angle to rotate.
         var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
