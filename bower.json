@@ -1,5 +1,5 @@
 {
-  "name": "phaser",
+  "name": "space-explorer",
   "description": "",
   "main": "",
   "authors": [
@@ -7,7 +7,6 @@
   ],
   "license": {
     "type": "MIT",
-    "url": "https://github.com/h5bp/html5-boilerplate/blob/master/LICENSE.txt"
   },
   "moduleType": [],
   "homepage": "",
