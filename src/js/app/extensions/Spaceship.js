@@ -1,6 +1,6 @@
 define([
     'Phaser',
-    'Config',
+    'utils/Config',
     'extensions/Character'
 ], function (Phaser, Config) {
 

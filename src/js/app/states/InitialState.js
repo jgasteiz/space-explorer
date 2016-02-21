@@ -1,10 +1,12 @@
-define(['Phaser', 'Config'], function (Phaser, Config) {
+define([
+    'Phaser',
+    'utils/Config'
+], function (Phaser, Config) {
 
     var game,
         config,
         spaceship,
-        aliens,
-        explosions;
+        aliens;
 
     var InitialState = function (_game) {
         game = _game;
@@ -47,11 +49,10 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
 
         // Create some aliens
         aliens = game.add.group();
-        explosions = game.add.group();
         aliens.enableBody = true;
 
         // Spawn the aliens
-        Phaser.Alien.spawnAliensInGame(game, aliens, explosions);
+        Phaser.Alien.spawnAliensInGame(game, aliens);
     }
 
     /**
@@ -74,7 +75,7 @@ define(['Phaser', 'Config'], function (Phaser, Config) {
         // When a bullet overlaps an alien, kill both sprites.
         game.physics.arcade.overlap(spaceship.bulletsGroup, aliens, function (bullet, alien) {
             bullet.kill();
-            alien.destroy();
+            alien.killWithAnimation('explosion');
         }, null, this);
     }
 

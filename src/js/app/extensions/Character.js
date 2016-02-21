@@ -1,4 +1,4 @@
-define(['Phaser'], function (Phaser) {
+define(['Phaser', 'utils/Print'], function (Phaser, Print) {
 
     /**
      * Character constructor method.
@@ -99,6 +99,22 @@ define(['Phaser'], function (Phaser) {
         }
 
         return angle;
+    };
+
+    /**
+     * Create an explosion animation and kill the sprite.
+     */
+    Character.prototype.killWithAnimation = function (animationName) {
+        var self = this;
+
+        self.loadTexture(animationName, 0);
+        self.animations.add(animationName);
+        // To play the animation with the new texture ( 'key', frameRate, loop, killOnComplete)
+        self.animations.play(animationName, 30, false, true);
+        self.animations.currentAnim.onComplete.add(function () {
+            self.kill();
+            Print.log(['Killed:', self]);
+        }, this);
     };
 
     /**
