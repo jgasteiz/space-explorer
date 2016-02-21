@@ -36,6 +36,10 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
     Character.prototype.moveToXY = function (x, y) {
         var self = this;
 
+        if (!self.alive) {
+            return;
+        }
+
         // Stop tweens
         self.tweens.forEach(function (tween) {
             if (tween.isRunning) {
@@ -106,6 +110,12 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
      */
     Character.prototype.killWithAnimation = function (animationName) {
         var self = this;
+
+        if (!self.alive) {
+            return;
+        }
+
+        self.alive = false;
 
         self.loadTexture(animationName, 0);
         self.animations.add(animationName);

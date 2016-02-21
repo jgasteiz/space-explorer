@@ -62,6 +62,11 @@ define([
         // Move the starfield
         game.starfield.tilePosition.y += 0.5;
 
+        if (!spaceship.alive) {
+            // TODO: Game over
+            return;
+        }
+
         // Listen for mouse input and update the spaceship.
         if (game.input.activePointer.isDown && game.input.activePointer.isMouse) {
             var mousePointer = game.input.mousePointer;
@@ -72,9 +77,16 @@ define([
             }
         }
 
+        // Overlaps
+
         // When a bullet overlaps an alien, kill both sprites.
         game.physics.arcade.overlap(spaceship.bulletsGroup, aliens, function (bullet, alien) {
             bullet.kill();
+            alien.killWithAnimation('explosion');
+        }, null, this);
+
+        game.physics.arcade.overlap(spaceship, aliens, function (spaceship, alien) {
+            spaceship.killWithAnimation('explosion');
             alien.killWithAnimation('explosion');
         }, null, this);
     }
