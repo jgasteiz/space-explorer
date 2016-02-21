@@ -1,4 +1,8 @@
-define(['Phaser', 'Config'], function (Phaser, Config) {
+define([
+    'Phaser',
+    'Config',
+    'extensions/Character'
+], function (Phaser, Config) {
 
     var config = Config.getConfig();
 
