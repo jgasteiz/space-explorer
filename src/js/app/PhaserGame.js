@@ -1,11 +1,13 @@
 define([
     'Phaser',
+    'utils/Config',
     'extensions/Spaceship',
     'extensions/Alien'
-], function (Phaser) {
+], function (Phaser, Config) {
 
-    var PhaserGame = function (w, h, containerId) {
-        return new Phaser.Game(w, h, Phaser.AUTO, containerId);
+    var PhaserGame = function () {
+        var config = Config.getConfig();
+        return new Phaser.Game(config.width, config.height, Phaser.AUTO, config.containerId);
     };
 
     return PhaserGame;
