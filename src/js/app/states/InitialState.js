@@ -29,7 +29,7 @@ define([
     function preload () {
         game.load.image('space', 'img/space.png');
         game.load.image('bullet', 'img/bullet.png');
-        game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 64, 90, 4);
+        game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 50, 70, 4);
         game.load.image('alien', 'img/invader.png');
         game.load.spritesheet('explosion', 'img/explode.png', 128, 128);
         game.time.advancedTiming = true;
@@ -94,7 +94,6 @@ define([
     function render () {
         game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         game.debug.text(Phaser.VERSION, game.world.width - 55, 14, "#ffff00");
-        // game.debug.body(aliens);
         // game.debug.body(spaceship);
     }
 });
