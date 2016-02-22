@@ -24,11 +24,8 @@ define([
         self.bulletsGroup = self.game.add.group();
         self.bulletsGroup.enableBody = true;
         self.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
-        self.bulletsGroup.setAll('anchor.x', 0.5);
-        self.bulletsGroup.setAll('anchor.y', 0.5);
-        self.bulletsGroup.setAll('outOfBoundsKill', true);
-        self.bulletsGroup.setAll('checkWorldBounds', true);
 
+        // Setup animations
         self.animations.add('move', [1,2,3]);
         self.animations.add('standby', [0]);
     };
@@ -64,7 +61,15 @@ define([
         var lastDate = lastBullet ? lastBullet.date + config.fireDelay : 0;
 
         if (lastDate < new Date().getTime()) {
-            var bullet = self.bulletsGroup.create(self.position.x, self.position.y, 'bullet');
+            var bullet = self.bulletsGroup.create(self.position.x, self.body.position.y + self.body.height / 2, 'bullet');
+            self.game.world.bringToTop(self);
+
+            bullet.anchor.x = 1;
+            bullet.anchor.y = 1;
+            bullet.outOfBoundsKill = true;
+            bullet.checkWorldBounds = true;
+
+            // debugger;
             bullet.angle = self.getFinalAngle(bullet, pointer);
 
             self.bullets.push({
