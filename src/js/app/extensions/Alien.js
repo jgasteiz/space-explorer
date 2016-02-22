@@ -50,10 +50,7 @@ define([
             }
 
             // Move the alien
-            alien.moveToXY(
-                Math.floor(Math.random() * config.width - 100) + 100,
-                Math.floor(Math.random() * config.height - 100) + 100
-            );
+            alien.moveAround();
         }
     };
 

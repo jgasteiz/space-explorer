@@ -1,4 +1,10 @@
-define(['Phaser', 'utils/Print'], function (Phaser, Print) {
+define([
+    'Phaser',
+    'utils/Config',
+    'utils/Print'
+], function (Phaser, Config, Print) {
+
+    var config = Config.getConfig();
 
     /**
      * Character constructor method.
@@ -32,8 +38,9 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
      * Method that moves the character to a given x y.
      * @param x
      * @param y
+     * @param onCompleteMovement
      */
-    Character.prototype.moveToXY = function (x, y) {
+    Character.prototype.moveToXY = function (x, y, onCompleteMovement) {
         var self = this;
 
         if (!self.alive) {
@@ -55,7 +62,13 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
             x: x,
             y: y
         }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true);
-        movementTween.onComplete.add(self.onCompleteMovement, self);
+
+        // If a callback for complete movement has been specified, add it.
+        if (onCompleteMovement) {
+            movementTween.onComplete.add(onCompleteMovement, self);
+        } else {
+            movementTween.onComplete.add(self.onCompleteMovement, self);
+        }
 
         // Rotate the character.
         var rotationTween = self.game.add.tween(self).to({
@@ -65,6 +78,19 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
 
         self.tweens.push(movementTween);
         self.tweens.push(rotationTween);
+    };
+
+    /**
+     * Method that makes a character move around the screen.
+     */
+    Character.prototype.moveAround = function () {
+        var self = this;
+
+        self.moveToXY(
+            Math.floor(Math.random() * config.width - 100) + 100,
+            Math.floor(Math.random() * config.height - 100) + 100,
+            self.moveAround
+        );
     };
 
     /**

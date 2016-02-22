@@ -7,9 +7,9 @@ define(function () {
                 width: 980,
                 height: 720,
                 bulletSpeed: 8,
-                fireDelay: 200,
+                fireDelay: 400,
                 fireSpeed: 600,
-                numAliens: 4
+                numAliens: 10
             }
         }
     };
