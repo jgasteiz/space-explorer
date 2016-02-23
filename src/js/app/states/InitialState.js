@@ -59,8 +59,6 @@ define([
      * Update.
      */
     function update () {
-        // Move the starfield
-        game.starfield.tilePosition.y += 0.5;
 
         if (!spaceship.alive) {
             // TODO: Game over
