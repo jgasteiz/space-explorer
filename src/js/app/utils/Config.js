@@ -9,7 +9,7 @@ define(function () {
                 bulletSpeed: 8,
                 fireDelay: 400,
                 fireSpeed: 600,
-                numAliens: 10
+                numAliens: 6
             }
         }
     };
