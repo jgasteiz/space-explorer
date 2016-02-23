@@ -40,8 +40,10 @@ define([
     Alien.spawnAliensInGame = function (game, group) {
         // Spawn `config.numAliens` number of aliens.
         for (var i = 0; i < config.numAliens; i++) {
-            var initialX = i * (config.width - 100) / config.numAliens + 50;
-            var alien = new Phaser.Alien(game, initialX + 30, 80, 'alien');
+            var initialX = 60 + (Math.random() * config.width - 60),
+                initialY = 60 + (Math.random() * config.height / 2);
+
+            var alien = new Phaser.Alien(game, initialX, initialY, 'alien');
             alien.angle = 180;
 
             // If a group was specified, add the alien to the group.
