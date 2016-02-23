@@ -65,6 +65,10 @@ define([
             return;
         }
 
+        if (aliens.countLiving() === 0) {
+            Phaser.Alien.spawnAliensInGame(game, aliens);
+        }
+
         // Listen for mouse input and update the spaceship.
         if (game.input.activePointer.isDown && game.input.activePointer.isMouse) {
             var mousePointer = game.input.mousePointer;
