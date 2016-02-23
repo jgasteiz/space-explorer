@@ -23,6 +23,7 @@ define([
         self.bullets = [];
         self.bulletsGroup = self.game.add.group();
         self.bulletsGroup.enableBody = true;
+        self.body.collideWorldBounds = true;
         self.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
         // Setup animations
@@ -70,14 +71,14 @@ define([
             bullet.checkWorldBounds = true;
 
             // debugger;
-            bullet.angle = self.getFinalAngle(bullet, pointer);
+            bullet.angle = self.getFinalAngle(bullet, {x: pointer.worldX, y: pointer.worldY});
 
             self.bullets.push({
                 sprite: bullet,
                 date: new Date().getTime()
             });
 
-            self.game.physics.arcade.moveToPointer(bullet, config.fireSpeed, pointer, null);
+            self.game.physics.arcade.moveToXY(bullet, pointer.worldX, pointer.worldY, config.fireSpeed, null);
         }
     };
 

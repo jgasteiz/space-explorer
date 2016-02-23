@@ -100,7 +100,7 @@ define([
     Character.prototype.moveToPointer = function (pointer) {
         var self = this;
 
-        self.moveToXY(pointer.x, pointer.y);
+        self.moveToXY(pointer.worldX, pointer.worldY);
     };
 
     /**
