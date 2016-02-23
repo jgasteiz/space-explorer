@@ -83,7 +83,9 @@ define([
 
         // When a bullet overlaps an alien, kill both sprites.
         game.physics.arcade.overlap(spaceship.bulletsGroup, aliens, function (bullet, alien) {
-            bullet.kill();
+            if (alien.alive) {
+                bullet.kill();
+            }
             alien.killWithAnimation('explosion');
         }, null, this);
 
