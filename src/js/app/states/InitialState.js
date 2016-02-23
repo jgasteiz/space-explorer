@@ -27,7 +27,7 @@ define([
      * Preload
      */
     function preload () {
-        game.load.image('space', 'img/space.png');
+        game.load.image('space', 'img/starcraft-map.png');
         game.load.image('bullet', 'img/bullet.png');
         game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 50, 70, 4);
         game.load.image('alien', 'img/invader.png');
@@ -40,9 +40,9 @@ define([
      */
     function create () {
         // Create game
-        game.world.setBounds(0, 0, config.width, config.height);
+        game.world.setBounds(0, 0, config.worldHeight, config.worldWidth);
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.starfield = game.add.tileSprite(0, 0, config.width, config.height, 'space');
+        game.starfield = game.add.sprite(0, 0, 'space');
 
         // Create spaceship
         spaceship = new Phaser.Spaceship(game, config.width / 2, config.height - 60, 'spaceship', 0);
@@ -53,6 +53,9 @@ define([
 
         // Spawn the aliens
         Phaser.Alien.spawnAliensInGame(game, aliens);
+
+        // The camera should follow the spaceship
+        game.camera.follow(spaceship);
     }
 
     /**
