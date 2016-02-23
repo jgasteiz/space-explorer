@@ -86,9 +86,11 @@ define([
     Character.prototype.moveAround = function () {
         var self = this;
 
+        var randomXY = Phaser.Character.getRandomWorldCoordinates();
+
         self.moveToXY(
-            Math.floor(Math.random() * config.width - 100) + 100,
-            Math.floor(Math.random() * config.height - 100) + 100,
+            randomXY.x,
+            randomXY.y,
             self.moveAround
         );
     };
@@ -177,6 +179,18 @@ define([
         rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
 
         return String(rotationAngle);
+    };
+
+    /**
+     * Helper function to return a random set of coordinates based in the world
+     * size.
+     * @returns {{x: number, y: number}}
+     */
+    Character.getRandomWorldCoordinates = function () {
+        return {
+            x: 120 + (Math.random() * config.worldWidth - 120),
+            y: 120 + (Math.random() * config.worldHeight - 120)
+        }
     };
 
     Phaser.Character = Character;

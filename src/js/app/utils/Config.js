@@ -9,9 +9,9 @@ define(function () {
                 worldHeight: 2048,
                 worldWidth: 2048,
                 bulletSpeed: 8,
-                fireDelay: 400,
+                fireDelay: 200,
                 fireSpeed: 600,
-                numAliens: 6
+                numAliens: 16
             }
         }
     };

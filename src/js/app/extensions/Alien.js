@@ -36,14 +36,14 @@ define([
      * Spawn a number of aliens in the given game.
      * @param game - Phaser.Game instance
      * @param group - Phaser.Group instance
+     * @param numAliens
      */
-    Alien.spawnAliensInGame = function (game, group) {
-        // Spawn `config.numAliens` number of aliens.
-        for (var i = 0; i < config.numAliens; i++) {
-            var initialX = 60 + (Math.random() * config.width - 60),
-                initialY = 60 + (Math.random() * config.height / 2);
+    Alien.spawnAliensInGame = function (game, group, numAliens) {
+        // Spawn `numAliens` number of aliens.
+        for (var i = 0; i < numAliens; i++) {
+            var randomXY = Phaser.Character.getRandomWorldCoordinates();
 
-            var alien = new Phaser.Alien(game, initialX, initialY, 'alien');
+            var alien = new Phaser.Alien(game, randomXY.x, randomXY.y, 'alien');
             alien.angle = 180;
 
             // If a group was specified, add the alien to the group.

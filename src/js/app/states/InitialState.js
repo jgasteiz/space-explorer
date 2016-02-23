@@ -6,6 +6,8 @@ define([
     var game,
         config,
         spaceship,
+        wave,
+        aliensKilled,
         aliens;
 
     var InitialState = function (_game) {
@@ -52,7 +54,9 @@ define([
         aliens.enableBody = true;
 
         // Spawn the aliens
-        Phaser.Alien.spawnAliensInGame(game, aliens);
+        Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
+        wave = 1;
+        aliensKilled = 0;
 
         // The camera should follow the spaceship
         game.camera.follow(spaceship);
@@ -69,7 +73,9 @@ define([
         }
 
         if (aliens.countLiving() === 0) {
-            Phaser.Alien.spawnAliensInGame(game, aliens);
+            Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
+            wave += 1;
+            aliensKilled = 0;
         }
 
         // Listen for mouse input and update the spaceship.
@@ -88,19 +94,22 @@ define([
         game.physics.arcade.overlap(spaceship.bulletsGroup, aliens, function (bullet, alien) {
             if (alien.alive) {
                 bullet.kill();
+                aliensKilled += 1;
+                alien.killWithAnimation('explosion');
             }
-            alien.killWithAnimation('explosion');
         }, null, this);
 
-        game.physics.arcade.overlap(spaceship, aliens, function (spaceship, alien) {
-            spaceship.killWithAnimation('explosion');
-            alien.killWithAnimation('explosion');
-        }, null, this);
+        // TODO: make this better.
+        //game.physics.arcade.overlap(spaceship, aliens, function (spaceship, alien) {
+        //    spaceship.killWithAnimation('explosion');
+        //    alien.killWithAnimation('explosion');
+        //}, null, this);
     }
 
     function render () {
-        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
-        game.debug.text(Phaser.VERSION, game.world.width - 55, 14, "#ffff00");
+        game.debug.text(game.time.fps || '--', config.width - 24, 14, "#00ff00");
+        game.debug.text('Wave: ' + wave, 12, 20, "#00ff00");
+        game.debug.text('Enemies killed: ' + aliensKilled + ' / ' + config.numAliens, 12, 40, "#00ff00");
         // game.debug.body(spaceship);
     }
 });
