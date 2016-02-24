@@ -81,11 +81,16 @@ define([
         // Listen for mouse input and update the spaceship.
         if (game.input.activePointer.isDown && game.input.activePointer.isMouse) {
             var mousePointer = game.input.mousePointer;
-            if (game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
-                spaceship.fireToPointer(mousePointer);
-            } else if (game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
-                spaceship.moveToPointer(mousePointer);
+            if (game.input.activePointer.button === Phaser.Mouse.LEFT_BUTTON) {
+                spaceship.moveToXY(mousePointer.worldX, mousePointer.worldY);
             }
+
+            // TODO: reenable "fire on XY" but adding SHIFT
+            // if (game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
+            //     spaceship.fireOnXY(mousePointer.worldX, mousePointer.worldY);
+            // } else if (game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
+            //     spaceship.moveToXY(mousePointer.worldX, mousePointer.worldY);
+            // }
         }
 
         // Overlaps
@@ -98,12 +103,6 @@ define([
                 alien.killWithAnimation('explosion');
             }
         }, null, this);
-
-        // TODO: make this better.
-        //game.physics.arcade.overlap(spaceship, aliens, function (spaceship, alien) {
-        //    spaceship.killWithAnimation('explosion');
-        //    alien.killWithAnimation('explosion');
-        //}, null, this);
     }
 
     function render () {

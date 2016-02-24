@@ -96,16 +96,6 @@ define([
     };
 
     /**
-     * Method that moves the character to a given pointer.
-     * @param pointer
-     */
-    Character.prototype.moveToPointer = function (pointer) {
-        var self = this;
-
-        self.moveToXY(pointer.worldX, pointer.worldY);
-    };
-
-    /**
      * Function called when the movement animation is completed.
      */
     Character.prototype.onCompleteMovement = function () {};
