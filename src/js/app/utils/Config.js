@@ -6,10 +6,12 @@ define(function () {
                 containerId: 'container',
                 width: 980,
                 height: 720,
+                worldHeight: 2048,
+                worldWidth: 2048,
                 bulletSpeed: 8,
                 fireDelay: 200,
                 fireSpeed: 600,
-                numAliens: 4
+                numAliens: 16
             }
         }
     };

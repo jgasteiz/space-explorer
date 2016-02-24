@@ -1,4 +1,10 @@
-define(['Phaser', 'utils/Print'], function (Phaser, Print) {
+define([
+    'Phaser',
+    'utils/Config',
+    'utils/Print'
+], function (Phaser, Config, Print) {
+
+    var config = Config.getConfig();
 
     /**
      * Character constructor method.
@@ -32,8 +38,9 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
      * Method that moves the character to a given x y.
      * @param x
      * @param y
+     * @param onCompleteMovement
      */
-    Character.prototype.moveToXY = function (x, y) {
+    Character.prototype.moveToXY = function (x, y, onCompleteMovement) {
         var self = this;
 
         if (!self.alive) {
@@ -55,7 +62,13 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
             x: x,
             y: y
         }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true);
-        movementTween.onComplete.add(self.onCompleteMovement, self);
+
+        // If a callback for complete movement has been specified, add it.
+        if (onCompleteMovement) {
+            movementTween.onComplete.add(onCompleteMovement, self);
+        } else {
+            movementTween.onComplete.add(self.onCompleteMovement, self);
+        }
 
         // Rotate the character.
         var rotationTween = self.game.add.tween(self).to({
@@ -68,13 +81,28 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
     };
 
     /**
+     * Method that makes a character move around the screen.
+     */
+    Character.prototype.moveAround = function () {
+        var self = this;
+
+        var randomXY = Phaser.Character.getRandomWorldCoordinates();
+
+        self.moveToXY(
+            randomXY.x,
+            randomXY.y,
+            self.moveAround
+        );
+    };
+
+    /**
      * Method that moves the character to a given pointer.
      * @param pointer
      */
     Character.prototype.moveToPointer = function (pointer) {
         var self = this;
 
-        self.moveToXY(pointer.x, pointer.y);
+        self.moveToXY(pointer.worldX, pointer.worldY);
     };
 
     /**
@@ -151,6 +179,18 @@ define(['Phaser', 'utils/Print'], function (Phaser, Print) {
         rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
 
         return String(rotationAngle);
+    };
+
+    /**
+     * Helper function to return a random set of coordinates based in the world
+     * size.
+     * @returns {{x: number, y: number}}
+     */
+    Character.getRandomWorldCoordinates = function () {
+        return {
+            x: 120 + (Math.random() * config.worldWidth - 120),
+            y: 120 + (Math.random() * config.worldHeight - 120)
+        }
     };
 
     Phaser.Character = Character;

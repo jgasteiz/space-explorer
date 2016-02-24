@@ -23,6 +23,7 @@ define([
         self.bullets = [];
         self.bulletsGroup = self.game.add.group();
         self.bulletsGroup.enableBody = true;
+        self.body.collideWorldBounds = true;
         self.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
         // Setup animations
@@ -70,14 +71,64 @@ define([
             bullet.checkWorldBounds = true;
 
             // debugger;
-            bullet.angle = self.getFinalAngle(bullet, pointer);
+            bullet.angle = self.getFinalAngle(bullet, {x: pointer.worldX, y: pointer.worldY});
 
             self.bullets.push({
                 sprite: bullet,
                 date: new Date().getTime()
             });
 
-            self.game.physics.arcade.moveToPointer(bullet, config.fireSpeed, pointer, null);
+            self.game.physics.arcade.moveToXY(bullet, pointer.worldX, pointer.worldY, config.fireSpeed, null);
+        }
+    };
+
+    /**
+     * Add method to update the spaceship movement based on cursors.
+     * @param cursors
+     */
+    Spaceship.prototype.updateMovement = function (cursors) {
+        var self = this;
+
+        self.body.velocity.x = 0;
+        self.body.velocity.y = 0;
+        if (cursors.down.isDown && cursors.left.isDown) {
+            self.body.velocity.x = -75;
+            self.body.velocity.y = 75;
+            self.angle = 225;
+            self.animations.play('move');
+        } else if (cursors.left.isDown && cursors.up.isDown) {
+            self.body.velocity.x = -75;
+            self.body.velocity.y = -75;
+            self.angle = 315;
+            self.animations.play('move');
+        } else if (cursors.up.isDown && cursors.right.isDown) {
+            self.body.velocity.y = -75;
+            self.body.velocity.x = 75;
+            self.angle = 45;
+            self.animations.play('move');
+        } else if (cursors.right.isDown && cursors.down.isDown) {
+            self.body.velocity.x = 75;
+            self.body.velocity.y = 75;
+            self.angle = 135;
+            self.animations.play('move');
+        } else if (cursors.left.isDown) {
+            self.body.velocity.x = -150;
+            self.angle = 270;
+            self.animations.play('move');
+        } else if (cursors.up.isDown) {
+            self.body.velocity.y = -150;
+            self.angle = 0;
+            self.animations.play('move');
+        } else if (cursors.right.isDown) {
+            self.body.velocity.x = 150;
+            self.angle = 90;
+            self.animations.play('move');
+        } else if (cursors.down.isDown) {
+            self.body.velocity.y = 150;
+            self.angle = 180;
+            self.animations.play('move');
+        } else {
+            self.animations.play('standby');
         }
     };
 
