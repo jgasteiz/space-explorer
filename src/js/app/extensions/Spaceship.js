@@ -35,16 +35,17 @@ define([
     Spaceship.prototype.constructor = Spaceship;
 
     /**
-     * Method that moves the player to a given pointer.
-     * @param pointer
+     * Method that moves the player to a given x y position.
+     * @param x
+     * @param y
      */
-    Spaceship.prototype.moveToPointer = function (pointer) {
+    Spaceship.prototype.moveToXY = function (x, y) {
         var self = this;
 
         // Start move animation.
         self.animations.play('move', 10, true);
 
-        Phaser.Character.prototype.moveToPointer.call(self, pointer);
+        Phaser.Character.prototype.moveToXY.call(self, x, y);
     };
 
     Spaceship.prototype.onCompleteMovement = function () {
@@ -52,10 +53,21 @@ define([
     };
 
     /**
+     * Fires on a character position.
+     */
+    Spaceship.prototype.fireOnCharacter = function (character, pointer) {
+        var self = this;
+
+        if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+            self.fireOnXY(character.position.x, character.position.y);
+        }
+    };
+
+    /**
      * Fire a bullet towards the given pointer.
      * @param pointer
      */
-    Spaceship.prototype.fireToPointer = function (pointer) {
+    Spaceship.prototype.fireOnXY = function (x, y) {
         var self = this;
 
         var lastBullet = self.bullets[self.bullets.length - 1];
@@ -71,14 +83,14 @@ define([
             bullet.checkWorldBounds = true;
 
             // debugger;
-            bullet.angle = self.getFinalAngle(bullet, {x: pointer.worldX, y: pointer.worldY});
+            bullet.angle = self.getFinalAngle(bullet, x, y);
 
             self.bullets.push({
                 sprite: bullet,
                 date: new Date().getTime()
             });
 
-            self.game.physics.arcade.moveToXY(bullet, pointer.worldX, pointer.worldY, config.fireSpeed, null);
+            self.game.physics.arcade.moveToXY(bullet, x, y, config.fireSpeed, null);
         }
     };
 

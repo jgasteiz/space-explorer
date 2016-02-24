@@ -27,6 +27,8 @@ define([
         self.anchor.setTo(0.5);
         game.physics.arcade.enable(self);
         self.body.collideWorldBounds = true;
+        self.inputEnabled = true;
+        self.input.useHandCursor = true;
 
         game.add.existing(self);
     };
@@ -72,7 +74,7 @@ define([
 
         // Rotate the character.
         var rotationTween = self.game.add.tween(self).to({
-            angle: self.getRotationAngle(self, {x: x, y: y})
+            angle: self.getRotationAngle(self, x, y)
         }, 300, Phaser.Easing.Linear.None, true, 100);
         rotationTween.onComplete.add(self.onCompleteRotation, self);
 
@@ -106,14 +108,14 @@ define([
     Character.prototype.onCompleteRotation = function () {};
 
     /**
-     * Calculate the new angle a sprite needs to have to look at a
-     * destination pointer.
+     * Calculate the new angle a sprite needs to have to look at a position x y.
      * @param sprite
-     * @param destination
+     * @param x
+     * @param y
      */
-    Character.prototype.getFinalAngle = function (sprite, destination) {
+    Character.prototype.getFinalAngle = function (sprite, x, y) {
         // Calculate the angle between the two points and the Y axis.
-        var angle = (Math.atan2(destination.y - sprite.y, destination.x - sprite.x) * 180 / Math.PI) + 90;
+        var angle = (Math.atan2(y - sprite.y, x - sprite.x) * 180 / Math.PI) + 90;
 
         // If the angle is negative, turn it into 360 based.
         if (angle < 0) {
@@ -146,16 +148,16 @@ define([
     };
 
     /**
-     * Calculate how much a sprite has to rotate to look at a
-     * destination pointer.
+     * Calculate how much a sprite has to rotate to look at a position x, y.
      * @param sprite
-     * @param destination
+     * @param x
+     * @param y
      * @returns {string}
      */
-    Character.prototype.getRotationAngle = function (sprite, destination) {
+    Character.prototype.getRotationAngle = function (sprite, x, y) {
         var self = this;
 
-        var angle = self.getFinalAngle(sprite, destination);
+        var angle = self.getFinalAngle(sprite, x, y);
 
         // Calculate the angle to rotate.
         var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
