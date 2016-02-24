@@ -20,10 +20,6 @@ define([
 
         Phaser.Character.call(self, game, x, y, sprite);
 
-        self.anchor.setTo(.5, .5);
-        game.physics.arcade.enable(self);
-        self.body.collideWorldBounds = true;
-
         self.speed = 200;
 
         game.add.existing(this);
