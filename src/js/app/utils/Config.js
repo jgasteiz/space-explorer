@@ -9,7 +9,7 @@ define(function () {
                 worldHeight: 2048,
                 worldWidth: 2048,
                 bulletSpeed: 8,
-                fireDelay: 200,
+                fireDelay: 100,
                 fireSpeed: 600,
                 numAliens: 16
             }
