@@ -54,10 +54,7 @@ define([
         aliens.enableBody = true;
 
         // Spawn the aliens
-        Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens, {
-            callback: spaceship.fireOnCharacter,
-            context: spaceship
-        });
+        //Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
         wave = 1;
         aliensKilled = 0;
 
@@ -75,25 +72,22 @@ define([
             return;
         }
 
-        if (aliens.countLiving() === 0) {
-            Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
-            wave += 1;
-            aliensKilled = 0;
-        }
+        spaceship.update();
+
+        //if (aliens.countLiving() === 0) {
+        //    Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
+        //    wave += 1;
+        //    aliensKilled = 0;
+        //}
 
         // Listen for mouse input and update the spaceship.
         if (game.input.activePointer.isDown && game.input.activePointer.isMouse) {
             var mousePointer = game.input.mousePointer;
-            if (game.input.activePointer.button === Phaser.Mouse.LEFT_BUTTON) {
+            if (game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
+                spaceship.fireOnXY(mousePointer.worldX, mousePointer.worldY);
+            } else if (game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
                 spaceship.moveToXY(mousePointer.worldX, mousePointer.worldY);
             }
-
-            // TODO: reenable "fire on XY" but adding SHIFT
-            // if (game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
-            //     spaceship.fireOnXY(mousePointer.worldX, mousePointer.worldY);
-            // } else if (game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
-            //     spaceship.moveToXY(mousePointer.worldX, mousePointer.worldY);
-            // }
         }
 
         // Overlaps

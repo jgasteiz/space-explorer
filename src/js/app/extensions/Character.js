@@ -21,6 +21,7 @@ define([
         Phaser.Sprite.call(self, game, x, y, sprite);
 
         self.tweens = [];
+        self.rotationTween = null;
 
         self.speed = 300;
 
@@ -29,6 +30,9 @@ define([
         self.body.collideWorldBounds = true;
         self.inputEnabled = true;
         self.input.useHandCursor = true;
+
+        self.animations.add('move');
+        self.animations.add('standby');
 
         game.add.existing(self);
     };
@@ -40,46 +44,23 @@ define([
      * Method that moves the character to a given x y.
      * @param x
      * @param y
-     * @param onCompleteMovement
      */
-    Character.prototype.moveToXY = function (x, y, onCompleteMovement) {
+    Character.prototype.moveToXY = function (x, y) {
         var self = this;
 
         if (!self.alive) {
             return;
         }
 
-        // Stop tweens
-        self.tweens.forEach(function (tween) {
-            if (tween.isRunning) {
-                tween.stop();
-            }
-        });
-        self.tweens = [];
+        // Start move animation.
+        self.animations.play('move', 10, true);
 
-        var duration = parseInt((self.game.physics.arcade.distanceToXY(self, x, y) / self.speed) * 1000, 10);
+        self.rotation = self.game.physics.arcade.moveToXY(self, x, y, self.speed) + (Math.PI / 2);
 
-        // Move the character.
-        var movementTween = self.game.add.tween(self).to({
+        self.desiredDestination = {
             x: x,
             y: y
-        }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true);
-
-        // If a callback for complete movement has been specified, add it.
-        if (onCompleteMovement) {
-            movementTween.onComplete.add(onCompleteMovement, self);
-        } else {
-            movementTween.onComplete.add(self.onCompleteMovement, self);
-        }
-
-        // Rotate the character.
-        var rotationTween = self.game.add.tween(self).to({
-            angle: self.getRotationAngle(self, x, y)
-        }, 300, Phaser.Easing.Linear.None, true, 100);
-        rotationTween.onComplete.add(self.onCompleteRotation, self);
-
-        self.tweens.push(movementTween);
-        self.tweens.push(rotationTween);
+        };
     };
 
     /**
@@ -100,29 +81,8 @@ define([
     /**
      * Function called when the movement animation is completed.
      */
-    Character.prototype.onCompleteMovement = function () {};
-
-    /**
-     * Function called when the rotation animation is completed.
-     */
-    Character.prototype.onCompleteRotation = function () {};
-
-    /**
-     * Calculate the new angle a sprite needs to have to look at a position x y.
-     * @param sprite
-     * @param x
-     * @param y
-     */
-    Character.prototype.getFinalAngle = function (sprite, x, y) {
-        // Calculate the angle between the two points and the Y axis.
-        var angle = (Math.atan2(y - sprite.y, x - sprite.x) * 180 / Math.PI) + 90;
-
-        // If the angle is negative, turn it into 360 based.
-        if (angle < 0) {
-            angle = 360 + angle;
-        }
-
-        return angle;
+    Character.prototype.onCompleteMovement = function () {
+        this.animations.play('standby');
     };
 
     /**
@@ -147,30 +107,62 @@ define([
         }, this);
     };
 
-    /**
-     * Calculate how much a sprite has to rotate to look at a position x, y.
-     * @param sprite
-     * @param x
-     * @param y
-     * @returns {string}
-     */
-    Character.prototype.getRotationAngle = function (sprite, x, y) {
+    ///**
+    // * Calculate the new angle a sprite needs to have to look at a position x y.
+    // * @param sprite
+    // * @param x
+    // * @param y
+    // */
+    //Character.prototype.getFinalAngle = function (sprite, x, y) {
+    //    // Calculate the angle between the two points and the Y axis.
+    //    var angle = (Math.atan2(y - sprite.y, x - sprite.x) * 180 / Math.PI) + 90;
+    //
+    //    // If the angle is negative, turn it into 360 based.
+    //    if (angle < 0) {
+    //        angle = 360 + angle;
+    //    }
+    //
+    //    return angle;
+    //};
+
+    ///**
+    // * Calculate how much a sprite has to rotate to look at a position x, y.
+    // * @param sprite
+    // * @param x
+    // * @param y
+    // * @returns {string}
+    // */
+    //Character.prototype.getRotationAngle = function (sprite, x, y) {
+    //    var self = this;
+    //
+    //    var angle = self.getFinalAngle(sprite, x, y);
+    //
+    //    // Calculate the angle to rotate.
+    //    var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
+    //
+    //    // If we're going to turn more than 180 degrees, turn anti-clockwise.
+    //    if (rotationAngle > 180) {
+    //        rotationAngle = -(360 - rotationAngle);
+    //    }
+    //
+    //    // Format it to a string with either `+` or `-`.
+    //    rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
+    //
+    //    return String(rotationAngle);
+    //};
+
+    Character.prototype.update = function () {
         var self = this;
 
-        var angle = self.getFinalAngle(sprite, x, y);
-
-        // Calculate the angle to rotate.
-        var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
-
-        // If we're going to turn more than 180 degrees, turn anti-clockwise.
-        if (rotationAngle > 180) {
-            rotationAngle = -(360 - rotationAngle);
+        if (self.desiredDestination) {
+            var distanceToDestination = self.position.distance(self.desiredDestination, true);
+            if (distanceToDestination < 50) {
+                self.desiredDestination = null;
+                self.body.velocity.x = 0;
+                self.body.velocity.y = 0;
+                self.onCompleteMovement();
+            }
         }
-
-        // Format it to a string with either `+` or `-`.
-        rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
-
-        return String(rotationAngle);
     };
 
     /**

@@ -35,37 +35,9 @@ define([
     Spaceship.prototype.constructor = Spaceship;
 
     /**
-     * Method that moves the player to a given x y position.
+     * Fire a bullet towards the given pointer.
      * @param x
      * @param y
-     */
-    Spaceship.prototype.moveToXY = function (x, y) {
-        var self = this;
-
-        // Start move animation.
-        self.animations.play('move', 10, true);
-
-        Phaser.Character.prototype.moveToXY.call(self, x, y);
-    };
-
-    Spaceship.prototype.onCompleteMovement = function () {
-        this.animations.play('standby');
-    };
-
-    /**
-     * Fires on a character position.
-     */
-    Spaceship.prototype.fireOnCharacter = function (character, pointer) {
-        var self = this;
-
-        if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
-            self.fireOnXY(character.position.x, character.position.y);
-        }
-    };
-
-    /**
-     * Fire a bullet towards the given pointer.
-     * @param pointer
      */
     Spaceship.prototype.fireOnXY = function (x, y) {
         var self = this;
@@ -75,72 +47,18 @@ define([
 
         if (lastDate < new Date().getTime()) {
             var bullet = self.bulletsGroup.create(self.position.x, self.body.position.y + self.body.height / 2, 'bullet');
-            self.game.world.bringToTop(self);
-
             bullet.anchor.x = 1;
             bullet.anchor.y = 1;
             bullet.outOfBoundsKill = true;
             bullet.checkWorldBounds = true;
-
-            // debugger;
-            bullet.angle = self.getFinalAngle(bullet, x, y);
 
             self.bullets.push({
                 sprite: bullet,
                 date: new Date().getTime()
             });
 
-            self.game.physics.arcade.moveToXY(bullet, x, y, config.fireSpeed, null);
-        }
-    };
-
-    /**
-     * Add method to update the spaceship movement based on cursors.
-     * @param cursors
-     */
-    Spaceship.prototype.updateMovement = function (cursors) {
-        var self = this;
-
-        self.body.velocity.x = 0;
-        self.body.velocity.y = 0;
-        if (cursors.down.isDown && cursors.left.isDown) {
-            self.body.velocity.x = -75;
-            self.body.velocity.y = 75;
-            self.angle = 225;
-            self.animations.play('move');
-        } else if (cursors.left.isDown && cursors.up.isDown) {
-            self.body.velocity.x = -75;
-            self.body.velocity.y = -75;
-            self.angle = 315;
-            self.animations.play('move');
-        } else if (cursors.up.isDown && cursors.right.isDown) {
-            self.body.velocity.y = -75;
-            self.body.velocity.x = 75;
-            self.angle = 45;
-            self.animations.play('move');
-        } else if (cursors.right.isDown && cursors.down.isDown) {
-            self.body.velocity.x = 75;
-            self.body.velocity.y = 75;
-            self.angle = 135;
-            self.animations.play('move');
-        } else if (cursors.left.isDown) {
-            self.body.velocity.x = -150;
-            self.angle = 270;
-            self.animations.play('move');
-        } else if (cursors.up.isDown) {
-            self.body.velocity.y = -150;
-            self.angle = 0;
-            self.animations.play('move');
-        } else if (cursors.right.isDown) {
-            self.body.velocity.x = 150;
-            self.angle = 90;
-            self.animations.play('move');
-        } else if (cursors.down.isDown) {
-            self.body.velocity.y = 150;
-            self.angle = 180;
-            self.animations.play('move');
-        } else {
-            self.animations.play('standby');
+            bullet.rotation = self.game.physics.arcade.moveToXY(bullet, x, y, config.fireSpeed) + (Math.PI / 2);
+            self.game.world.bringToTop(self);
         }
     };
 
