@@ -38,13 +38,13 @@ define([
      * @param group - Phaser.Group instance
      * @param numAliens
      */
-    Alien.spawnAliensInGame = function (game, group, numAliens) {
+    Alien.spawnAliensInGame = function (game, group, numAliens, onAlienClick) {
         // Spawn `numAliens` number of aliens.
         for (var i = 0; i < numAliens; i++) {
             var randomXY = Phaser.Character.getRandomWorldCoordinates();
 
             var alien = new Phaser.Alien(game, randomXY.x, randomXY.y, 'alien');
-            alien.angle = 180;
+            alien.events.onInputDown.add(onAlienClick.callback, onAlienClick.context);
 
             // If a group was specified, add the alien to the group.
             if (group) {

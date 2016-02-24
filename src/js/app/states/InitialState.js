@@ -54,7 +54,10 @@ define([
         aliens.enableBody = true;
 
         // Spawn the aliens
-        Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
+        Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens, {
+            callback: spaceship.fireOnCharacter,
+            context: spaceship
+        });
         wave = 1;
         aliensKilled = 0;
 
