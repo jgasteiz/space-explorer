@@ -1,8 +1,9 @@
 define([
     'Phaser',
-    'utils/Config',
+    'modules/Config',
+    'modules/Print',
     'extensions/Character'
-], function (Phaser, Config) {
+], function (Phaser, Config, Print) {
 
     var config = Config.getConfig();
 
@@ -61,6 +62,25 @@ define([
 
             bullet.rotation = self.game.physics.arcade.moveToXY(bullet, x, y, config.fireSpeed) + (Math.PI / 2);
             self.game.world.bringToTop(self);
+        }
+    };
+
+    /**
+     * Spaceship's update method.
+     */
+    Spaceship.prototype.update = function () {
+        var self = this;
+
+        Phaser.Character.prototype.update.call(self);
+
+        // Listen for mouse input and update the spaceship.
+        if (self.game.input.activePointer.isDown && self.game.input.activePointer.isMouse) {
+            var mousePointer = self.game.input.mousePointer;
+            if (self.game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
+                self.fireOnXY(mousePointer.worldX, mousePointer.worldY);
+            } else if (self.game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
+                self.moveToXY(mousePointer.worldX, mousePointer.worldY);
+            }
         }
     };
 

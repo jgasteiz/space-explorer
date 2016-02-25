@@ -1,7 +1,7 @@
 define([
     'Phaser',
-    'utils/Config',
-    'utils/Print'
+    'modules/Config',
+    'modules/Print'
 ], function (Phaser, Config, Print) {
 
     var config = Config.getConfig();

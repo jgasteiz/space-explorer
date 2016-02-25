@@ -1,10 +1,13 @@
 define([
     'Phaser',
-    'utils/Config'
-], function (Phaser, Config) {
+    'modules/Config',
+    'modules/Print',
+    'modules/Collisions'
+], function (Phaser, Config, Print, Collisions) {
 
     var game,
         config,
+        collisions,
         spaceship,
         aliens;
 
@@ -56,6 +59,9 @@ define([
 
         // The camera should follow the spaceship
         game.camera.follow(spaceship);
+
+        // Initialise the collisions module
+        collisions = new Collisions(game, aliens, spaceship);
     }
 
     /**
@@ -68,27 +74,11 @@ define([
             return;
         }
 
+        // Update spaceship
         spaceship.update();
 
-        // Listen for mouse input and update the spaceship.
-        if (game.input.activePointer.isDown && game.input.activePointer.isMouse) {
-            var mousePointer = game.input.mousePointer;
-            if (game.input.activePointer.button == Phaser.Mouse.RIGHT_BUTTON) {
-                spaceship.fireOnXY(mousePointer.worldX, mousePointer.worldY);
-            } else if (game.input.activePointer.button == Phaser.Mouse.LEFT_BUTTON) {
-                spaceship.moveToXY(mousePointer.worldX, mousePointer.worldY);
-            }
-        }
-
-        // Overlaps
-
-        // When a bullet overlaps an alien, kill both sprites.
-        game.physics.arcade.overlap(spaceship.bulletsGroup, aliens, function (bullet, alien) {
-            if (alien.alive) {
-                bullet.kill();
-                alien.loseHealth(25);
-            }
-        }, null, this);
+        // Collisions
+        collisions.update();
     }
 
     function render () {

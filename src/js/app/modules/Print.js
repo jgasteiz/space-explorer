@@ -1,5 +1,5 @@
 define([
-    'utils/Config'
+    'modules/Config'
 ], function (Config) {
 
     var config = Config.getConfig();

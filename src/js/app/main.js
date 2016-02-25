@@ -1,5 +1,5 @@
 requirejs([
-    'utils/Config',
+    'modules/Config',
     'PhaserGame',
     'states/InitialState'
 ], function (Config, PhaserGame, InitialState) {
