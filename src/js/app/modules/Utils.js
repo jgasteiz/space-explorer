@@ -9,28 +9,16 @@ define([], function () {
          * @returns {*}
          */
         getColourForValue: function (value) {
-            if (value > 75) {
+            if (value > 80) {
                 return '#0f0';
-            } else if (value > 50) {
+            } else if (value > 60) {
                 return '#ffe500';
+            } else if (value > 40) {
+                return '#ffc000';
             } else if (value > 25) {
                 return '#ff9e00';
             }
             return '#f00';
-        },
-
-        /**
-         * Helper function to return a random set of coordinates based in the world
-         * size.
-         * @param worldWidth
-         * @param worldHeight
-         * @returns {{x: number, y: number}}
-         */
-        getRandomWorldCoordinates: function (worldWidth, worldHeight) {
-            return {
-                x: 120 + (Math.random() * worldWidth - 120),
-                y: 120 + (Math.random() * worldHeight - 120)
-            }
         },
 
         /**
@@ -84,9 +72,12 @@ define([], function () {
         spawnAliensInGame: function (game, group, config) {
             // Spawn `numAliens` number of aliens.
             for (var i = 0; i < config.numAliens; i++) {
-                var randomXY = this.getRandomWorldCoordinates(config.worldWidth, config.worldHeight);
-
-                var alien = new Phaser.Alien(game, randomXY.x, randomXY.y, 'alien');
+                var alien = new Phaser.Alien(
+                    game,
+                    game.rnd.integerInRange(100, config.worldWidth - 100),
+                    game.rnd.integerInRange(100, config.worldHeight - 100),
+                    'alien'
+                );
 
                 // If a group was specified, add the alien to the group.
                 if (group) {

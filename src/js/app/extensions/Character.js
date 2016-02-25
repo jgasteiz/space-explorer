@@ -147,15 +147,13 @@ define([
      * Method that makes a character move around the screen.
      */
     Character.prototype.moveAroundWorld = function () {
-        var randomXY = Utils.getRandomWorldCoordinates(config.worldWidth, config.worldHeight);
-
         // Update the callback for movement completed.
         this.onCompleteMovement = this.moveAroundWorld;
 
         // Move to some random place.
         this.moveToXY(
-            randomXY.x,
-            randomXY.y
+            this.game.rnd.integerInRange(100, config.worldWidth - 100),
+            this.game.rnd.integerInRange(100, config.worldHeight - 100)
         );
     };
 
