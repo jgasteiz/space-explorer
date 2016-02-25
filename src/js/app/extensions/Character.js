@@ -20,20 +20,27 @@ define([
 
         Phaser.Sprite.call(self, game, x, y, sprite);
 
-        self.tweens = [];
-        self.rotationTween = null;
-
-        self.speed = 300;
-
+        // Physics and position
         self.anchor.setTo(0.5);
         game.physics.arcade.enable(self);
-        self.body.collideWorldBounds = true;
         self.inputEnabled = true;
         self.input.useHandCursor = true;
+        self.body.collideWorldBounds = true;
 
+        // Animations
         self.animations.add('move');
         self.animations.add('standby');
 
+        // Character properties
+        self.speed = 300;
+        self.health = 100;
+
+        // Healthbar
+        self.healthBar = game.add.text(0, 0, self.health,
+            {font: '18px Arial', align: 'center', fill: '#00ff00'});
+        self.healthBar.anchor.set(0.5);
+
+        // Add to the game
         game.add.existing(self);
     };
 
@@ -163,6 +170,10 @@ define([
                 self.onCompleteMovement();
             }
         }
+
+        // Update healthbar position
+        self.healthBar.x = Math.floor(self.x);
+        self.healthBar.y = Math.floor(self.y - self.height + 30);
     };
 
     /**

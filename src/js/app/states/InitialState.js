@@ -104,8 +104,10 @@ define([
 
     function render () {
         game.debug.text(game.time.fps || '--', config.width - 24, 14, "#00ff00");
-        game.debug.text('Wave: ' + wave, 12, 20, "#00ff00");
-        game.debug.text('Enemies killed: ' + aliensKilled + ' / ' + config.numAliens, 12, 40, "#00ff00");
+        game.debug.text('Health: ' + spaceship.health, 12, 20, "#00ff00");
+
+        //game.debug.text('Wave: ' + wave, 12, 20, "#00ff00");
+        //game.debug.text('Enemies killed: ' + aliensKilled + ' / ' + config.numAliens, 12, 40, "#00ff00");
         // game.debug.body(spaceship);
     }
 });

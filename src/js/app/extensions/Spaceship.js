@@ -20,10 +20,12 @@ define([
 
         Phaser.Character.call(self, game, x, y, sprite);
 
+        self.anchor.setTo(0.5, 0.4);
+
+        // Setup bullets
         self.bullets = [];
         self.bulletsGroup = self.game.add.group();
         self.bulletsGroup.enableBody = true;
-        self.body.collideWorldBounds = true;
         self.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
         // Setup animations
