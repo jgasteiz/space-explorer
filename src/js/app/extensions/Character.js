@@ -187,7 +187,10 @@ define([
      * Play shot animation in the character.
      */
     Character.prototype.receiveShot = function () {
-        var impact = this.game.add.sprite(this.position.x, this.position.y, 'impact');
+        var impact = this.game.add.sprite(
+            this.game.rnd.integerInRange(this.position.x - this.width / 2, this.position.x + this.width / 2),
+            this.game.rnd.integerInRange(this.position.y - this.height / 2, this.position.y + this.height / 2),
+            'impact');
         impact.anchor.setTo(0.5);
         impact.animations.add('impact');
         impact.animations.play('impact', 20, false, true);
