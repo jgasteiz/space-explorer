@@ -9,13 +9,18 @@ define([
     }
 
     Collisions.prototype.update = function () {
-        var self = this;
-
-        // When a bullet overlaps an alien, kill both sprites.
-        self.game.physics.arcade.overlap(self.spaceship.bulletsGroup, self.aliens, function (bullet, alien) {
-            if (alien.alive) {
+        // When a bullet overlaps an alien, damage the alien.
+        this.game.physics.arcade.overlap(this.spaceship.bulletsGroup, this.aliens, function (bullet, alien) {
+            if (alien.isAlive()) {
                 bullet.kill();
-                alien.loseHealth(25);
+                alien.addDamage(this.spaceship.getAttackValue());
+            }
+        }, null, this);
+
+        // When an alien overlaps the spaceship, damage the spaceship.
+        this.game.physics.arcade.overlap(this.spaceship, this.aliens, function (bullet, alien) {
+            if (alien.isAlive()) {
+                this.spaceship.addDamage(alien.getAttackValue());
             }
         }, null, this);
     };

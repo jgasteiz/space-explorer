@@ -9,10 +9,32 @@ define(function () {
                 worldHeight: 2048,
                 worldWidth: 2048,
                 bulletSpeed: 8,
-                fireDelay: 100,
-                fireSpeed: 600,
                 numAliens: 16
+            };
+        },
+        getCharacterConfig: function () {
+            return {
+                speed: 200,
+                maxHealth: 100,
+                health: 100,
+                attackValue: 20,
+                strength: 1,
+                resistance: 1,
+                fireDelay: 100,
+                fireSpeed: 600
             }
+        },
+        getAlienConfig: function () {
+            return {
+                speed: 60,
+                attackValue: 1
+            };
+        },
+        getSpaceshipConfig: function () {
+            return {
+                speed: 300,
+                strength: 1.2
+            };
         }
     };
 });
