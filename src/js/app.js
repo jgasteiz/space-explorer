@@ -1,7 +1,7 @@
 requirejs.config({
     baseUrl: 'js/app',
     paths: {
-        Phaser: '../../vendor/phaser/build/phaser'
+        Phaser: '../phaser.min'
     }
 });
 
