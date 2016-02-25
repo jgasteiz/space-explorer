@@ -62,7 +62,7 @@ define([
             collisions.update();
         },
         render: function () {
-            game.debug.text(game.time.fps || '--', config.width - 24, 14, "#00ff00");
+            game.debug.text('FPS: ' + game.time.fps || '--', 12, 40, "#00ff00");
             game.debug.text(
                 'Health: ' + spaceship.getHealth(),
                 12,
