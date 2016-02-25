@@ -6,8 +6,6 @@ define([
     var game,
         config,
         spaceship,
-        wave,
-        aliensKilled,
         aliens;
 
     var InitialState = function (_game) {
@@ -54,9 +52,7 @@ define([
         aliens.enableBody = true;
 
         // Spawn the aliens
-        //Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
-        wave = 1;
-        aliensKilled = 0;
+        Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
 
         // The camera should follow the spaceship
         game.camera.follow(spaceship);
@@ -74,12 +70,6 @@ define([
 
         spaceship.update();
 
-        //if (aliens.countLiving() === 0) {
-        //    Phaser.Alien.spawnAliensInGame(game, aliens, config.numAliens);
-        //    wave += 1;
-        //    aliensKilled = 0;
-        //}
-
         // Listen for mouse input and update the spaceship.
         if (game.input.activePointer.isDown && game.input.activePointer.isMouse) {
             var mousePointer = game.input.mousePointer;
@@ -96,8 +86,7 @@ define([
         game.physics.arcade.overlap(spaceship.bulletsGroup, aliens, function (bullet, alien) {
             if (alien.alive) {
                 bullet.kill();
-                aliensKilled += 1;
-                alien.killWithAnimation('explosion');
+                alien.loseHealth(25);
             }
         }, null, this);
     }
@@ -105,9 +94,6 @@ define([
     function render () {
         game.debug.text(game.time.fps || '--', config.width - 24, 14, "#00ff00");
         game.debug.text('Health: ' + spaceship.health, 12, 20, "#00ff00");
-
-        //game.debug.text('Wave: ' + wave, 12, 20, "#00ff00");
-        //game.debug.text('Enemies killed: ' + aliensKilled + ' / ' + config.numAliens, 12, 40, "#00ff00");
         // game.debug.body(spaceship);
     }
 });

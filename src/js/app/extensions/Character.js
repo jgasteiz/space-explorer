@@ -78,11 +78,28 @@ define([
 
         var randomXY = Phaser.Character.getRandomWorldCoordinates();
 
+        // Update the callback for movement completed.
+        self.onCompleteMovement = self.moveAround;
+
+        // Move to some random place.
         self.moveToXY(
             randomXY.x,
-            randomXY.y,
-            self.moveAround
+            randomXY.y
         );
+    };
+
+    /**
+     * Reduce the amount of health of the character. If the health goes to
+     * 0 or below, kill the character.
+     * @param amount
+     */
+    Character.prototype.loseHealth = function (amount) {
+        var self = this;
+
+        self.health = self.health - amount;
+        if (self.health < 1) {
+            self.killWithAnimation('explosion');
+        }
     };
 
     /**
@@ -103,6 +120,7 @@ define([
         }
 
         self.alive = false;
+        self.healthBar.kill();
 
         self.loadTexture(animationName, 0);
         self.animations.add(animationName);
@@ -114,50 +132,9 @@ define([
         }, this);
     };
 
-    ///**
-    // * Calculate the new angle a sprite needs to have to look at a position x y.
-    // * @param sprite
-    // * @param x
-    // * @param y
-    // */
-    //Character.prototype.getFinalAngle = function (sprite, x, y) {
-    //    // Calculate the angle between the two points and the Y axis.
-    //    var angle = (Math.atan2(y - sprite.y, x - sprite.x) * 180 / Math.PI) + 90;
-    //
-    //    // If the angle is negative, turn it into 360 based.
-    //    if (angle < 0) {
-    //        angle = 360 + angle;
-    //    }
-    //
-    //    return angle;
-    //};
-
-    ///**
-    // * Calculate how much a sprite has to rotate to look at a position x, y.
-    // * @param sprite
-    // * @param x
-    // * @param y
-    // * @returns {string}
-    // */
-    //Character.prototype.getRotationAngle = function (sprite, x, y) {
-    //    var self = this;
-    //
-    //    var angle = self.getFinalAngle(sprite, x, y);
-    //
-    //    // Calculate the angle to rotate.
-    //    var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
-    //
-    //    // If we're going to turn more than 180 degrees, turn anti-clockwise.
-    //    if (rotationAngle > 180) {
-    //        rotationAngle = -(360 - rotationAngle);
-    //    }
-    //
-    //    // Format it to a string with either `+` or `-`.
-    //    rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
-    //
-    //    return String(rotationAngle);
-    //};
-
+    /**
+     * Character's update method.
+     */
     Character.prototype.update = function () {
         var self = this;
 
@@ -174,6 +151,26 @@ define([
         // Update healthbar position
         self.healthBar.x = Math.floor(self.x);
         self.healthBar.y = Math.floor(self.y - self.height + 30);
+        self.healthBar.setText(self.health);
+        self.healthBar.style.fill = Character.getColourForValue(self.health);
+    };
+
+    /**
+     * Given a value, returns a colour.
+     * The higher the value, the more green;
+     * The lower the value, the more red.
+     * @param value
+     * @returns {*}
+     */
+    Character.getColourForValue = function (value) {
+        if (value > 75) {
+            return '#0f0';
+        } else if (value > 50) {
+            return '#ffe500';
+        } else if (value > 25) {
+            return '#ff9e00';
+        }
+        return '#f00';
     };
 
     /**
@@ -190,3 +187,47 @@ define([
 
     Phaser.Character = Character;
 });
+
+///**
+// * Calculate the new angle a sprite needs to have to look at a position x y.
+// * @param sprite
+// * @param x
+// * @param y
+// */
+//Character.prototype.getFinalAngle = function (sprite, x, y) {
+//    // Calculate the angle between the two points and the Y axis.
+//    var angle = (Math.atan2(y - sprite.y, x - sprite.x) * 180 / Math.PI) + 90;
+//
+//    // If the angle is negative, turn it into 360 based.
+//    if (angle < 0) {
+//        angle = 360 + angle;
+//    }
+//
+//    return angle;
+//};
+
+///**
+// * Calculate how much a sprite has to rotate to look at a position x, y.
+// * @param sprite
+// * @param x
+// * @param y
+// * @returns {string}
+// */
+//Character.prototype.getRotationAngle = function (sprite, x, y) {
+//    var self = this;
+//
+//    var angle = self.getFinalAngle(sprite, x, y);
+//
+//    // Calculate the angle to rotate.
+//    var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
+//
+//    // If we're going to turn more than 180 degrees, turn anti-clockwise.
+//    if (rotationAngle > 180) {
+//        rotationAngle = -(360 - rotationAngle);
+//    }
+//
+//    // Format it to a string with either `+` or `-`.
+//    rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
+//
+//    return String(rotationAngle);
+//};
