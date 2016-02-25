@@ -115,17 +115,6 @@ define([
     };
 
     /**
-     * Add damage to the character.
-     * @param amount
-     */
-    Character.prototype.addDamage = function (amount) {
-        this.setHealth(this.getHealth() - amount / this.resistance);
-        if (this.getHealth() < 1) {
-            this.die();
-        }
-    };
-
-    /**
      * Move the character to a given position x,y.
      * @param x
      * @param y
@@ -165,6 +154,18 @@ define([
     };
 
     /**
+     * Add damage to the character.
+     * @param amount
+     */
+    Character.prototype.addDamage = function (amount) {
+        this.setHealth(this.getHealth() - amount / this.resistance);
+        this.receiveShot();
+        if (this.getHealth() < 1) {
+            this.die();
+        }
+    };
+
+    /**
      * Character dies.
      * Mark the sprite as dead, remove the healthbar and play dying animation.
      */
@@ -180,6 +181,16 @@ define([
         death.anchor.setTo(0.5);
         death.animations.add('death');
         death.animations.play('death', 40, false, true);
+    };
+
+    /**
+     * Play shot animation in the character.
+     */
+    Character.prototype.receiveShot = function () {
+        var impact = this.game.add.sprite(this.position.x, this.position.y, 'impact');
+        impact.anchor.setTo(0.5);
+        impact.animations.add('impact');
+        impact.animations.play('impact', 20, false, true);
     };
 
     /**
