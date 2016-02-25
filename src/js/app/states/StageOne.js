@@ -12,20 +12,18 @@ define([
         spaceship,
         aliens;
 
-    var InitialState = function (_game) {
+    var StageOne = function (_game) {
         game = _game;
         config = Config.getConfig();
     };
 
-    InitialState.prototype = {
-        constructor: InitialState,
+    StageOne.prototype = {
+        constructor: StageOne,
         preload: function () {
-            game.load.image('space', 'img/starcraft-map.png');
-            game.load.image('bullet', 'img/bullet.png');
-            game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 50, 70, 4);
-            game.load.image('alien', 'img/invader.png');
-            game.load.spritesheet('death', 'img/explode.png', 128, 128);
-            game.time.advancedTiming = true;
+            game.scale.setGameSize(window.innerWidth, window.innerHeight);
+            game.scale.setResizeCallback(function () {
+                game.scale.setGameSize(window.innerWidth, window.innerHeight);
+            }, game);
         },
         create: function () {
             // Create game
@@ -34,7 +32,12 @@ define([
             game.starfield = game.add.sprite(0, 0, 'space');
 
             // Create spaceship
-            spaceship = new Phaser.Spaceship(game, config.width / 2, config.height - 60, 'spaceship', 0);
+            spaceship = new Phaser.Spaceship(
+                game,
+                game.rnd.integerInRange(100, config.worldWidth - 100),
+                game.rnd.integerInRange(100, config.worldHeight - 100),
+                'spaceship',
+                0);
 
             // Create some aliens
             aliens = game.add.group();
@@ -60,10 +63,15 @@ define([
         },
         render: function () {
             game.debug.text(game.time.fps || '--', config.width - 24, 14, "#00ff00");
-            game.debug.text('Health: ' + spaceship.health, 12, 20, "#00ff00");
+            game.debug.text(
+                'Health: ' + spaceship.getHealth(),
+                12,
+                20,
+                Utils.getColourForValue(spaceship.getHealth())
+            );
             // game.debug.body(spaceship);
         }
     };
 
-    return InitialState;
+    return StageOne;
 });
