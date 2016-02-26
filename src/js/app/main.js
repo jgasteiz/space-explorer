@@ -1,9 +1,11 @@
 requirejs([
-    'utils/Config',
+    'modules/Config',
     'PhaserGame',
-    'states/InitialState'
-], function (Config, PhaserGame, InitialState) {
+    'states/Boot',
+    'states/StageOne'
+], function (Config, PhaserGame, Boot, StageOne) {
     var game = new PhaserGame();
-    game.state.add('InitialState', InitialState);
-    game.state.start('InitialState');
+    game.state.add('Boot', Boot);
+    game.state.add('StageOne', StageOne);
+    game.state.start('Boot');
 });

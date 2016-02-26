@@ -1,8 +1,9 @@
 define([
     'Phaser',
-    'utils/Config',
-    'utils/Print'
-], function (Phaser, Config, Print) {
+    'modules/Config',
+    'modules/Print',
+    'modules/Utils'
+], function (Phaser, Config, Print, Utils) {
 
     var config = Config.getConfig();
 
@@ -16,173 +17,206 @@ define([
      * @constructor
      */
     var Character = function (game, x, y, sprite) {
-        var self = this;
+        Phaser.Sprite.call(this, game, x, y, sprite);
+        this.initializeConfig(Config.getCharacterConfig());
 
-        Phaser.Sprite.call(self, game, x, y, sprite);
+        // Physics and position
+        this.anchor.setTo(0.5);
+        game.physics.arcade.enable(this);
+        this.inputEnabled = true;
+        this.input.useHandCursor = true;
+        this.body.collideWorldBounds = true;
 
-        self.tweens = [];
+        // Animations
+        this.animations.add('move');
+        this.animations.add('standby');
 
-        self.speed = 300;
+        // Character properties
 
-        self.anchor.setTo(0.5);
-        game.physics.arcade.enable(self);
-        self.body.collideWorldBounds = true;
-        self.inputEnabled = true;
-        self.input.useHandCursor = true;
 
-        game.add.existing(self);
+        // Healthbar
+        this.healthBar = game.add.text(0, 0, this.health,
+            {font: '18px Arial', align: 'center', fill: '#00ff00'});
+        this.healthBar.anchor.set(0.5);
+
+        // Add to the game
+        game.add.existing(this);
     };
 
     Character.prototype = Object.create(Phaser.Sprite.prototype);
     Character.prototype.constructor = Character;
 
     /**
-     * Method that moves the character to a given x y.
+     * Initialise character properties from a config object.
+     * @param characterConfig
+     */
+    Character.prototype.initializeConfig = function (characterConfig) {
+        for (var prop in characterConfig) {
+            if (characterConfig.hasOwnProperty(prop)) {
+                this[prop] = characterConfig[prop];
+            }
+        }
+    };
+
+    /**
+     * Get the character health.
+     * @returns {number|*}
+     */
+    Character.prototype.getHealth = function () {
+        return this.health;
+    };
+
+    /**
+     * Set the character health.
+     * @param newHealth
+     */
+    Character.prototype.setHealth = function (newHealth) {
+        this.health = newHealth;
+    };
+
+    /**
+     * Add health to the character.
+     * @param extraHealth
+     */
+    Character.prototype.addHealth = function (extraHealth) {
+        if (extraHealth < 0) {
+            var newHealth = Phaser.Math.min(this.getHealth() + extraHealth, this.maxHealth);
+            this.setHealth(newHealth);
+        }
+    };
+
+    /**
+     * Return whether the character is alive or not.
+     * @returns {boolean}
+     */
+    Character.prototype.isAlive = function () {
+        return this.alive;
+    };
+
+    /**
+     * Attach another character.
+     * @param character
+     */
+    Character.prototype.attack = function (character) {
+        Print.log('Atacking ' + character + ': to be implemented');
+    };
+
+    Character.prototype.getAttackValue = function () {
+        return this.strength * this.attackValue;
+    };
+
+    /**
+     * Patrol around a given position x,y.
      * @param x
      * @param y
-     * @param onCompleteMovement
      */
-    Character.prototype.moveToXY = function (x, y, onCompleteMovement) {
-        var self = this;
+    Character.prototype.patrol = function (x, y) {
+        Print.log('Patroling around ' + x +  ', ' + y + ': to be implemented');
+    };
 
-        if (!self.alive) {
+    /**
+     * Move the character to a given position x,y.
+     * @param x
+     * @param y
+     */
+    Character.prototype.moveToXY = function (x, y) {
+        if (!this.isAlive()) {
             return;
         }
 
-        // Stop tweens
-        self.tweens.forEach(function (tween) {
-            if (tween.isRunning) {
-                tween.stop();
-            }
-        });
-        self.tweens = [];
-
-        var duration = parseInt((self.game.physics.arcade.distanceToXY(self, x, y) / self.speed) * 1000, 10);
-
-        // Move the character.
-        var movementTween = self.game.add.tween(self).to({
-            x: x,
-            y: y
-        }, Math.max(duration, 400), Phaser.Easing.Quadratic.InOut, true);
-
-        // If a callback for complete movement has been specified, add it.
-        if (onCompleteMovement) {
-            movementTween.onComplete.add(onCompleteMovement, self);
-        } else {
-            movementTween.onComplete.add(self.onCompleteMovement, self);
-        }
-
-        // Rotate the character.
-        var rotationTween = self.game.add.tween(self).to({
-            angle: self.getRotationAngle(self, x, y)
-        }, 300, Phaser.Easing.Linear.None, true, 100);
-        rotationTween.onComplete.add(self.onCompleteRotation, self);
-
-        self.tweens.push(movementTween);
-        self.tweens.push(rotationTween);
+        // Start move animation.
+        this.animations.play('move', 10, true);
+        // Move the spaceship to the destination and set its rotation.
+        this.rotation = this.game.physics.arcade.moveToXY(this, x, y, this.speed) + (window.Math.PI / 2);
+        // Set the desired destination.
+        this.desiredDestination = {x: x, y: y};
     };
 
     /**
      * Method that makes a character move around the screen.
      */
-    Character.prototype.moveAround = function () {
-        var self = this;
+    Character.prototype.moveAroundWorld = function () {
+        // Update the callback for movement completed.
+        this.onCompleteMovement = this.moveAroundWorld;
 
-        var randomXY = Phaser.Character.getRandomWorldCoordinates();
-
-        self.moveToXY(
-            randomXY.x,
-            randomXY.y,
-            self.moveAround
+        // Move to some random place.
+        this.moveToXY(
+            this.game.rnd.integerInRange(100, config.worldWidth - 100),
+            this.game.rnd.integerInRange(100, config.worldHeight - 100)
         );
     };
 
     /**
      * Function called when the movement animation is completed.
      */
-    Character.prototype.onCompleteMovement = function () {};
-
-    /**
-     * Function called when the rotation animation is completed.
-     */
-    Character.prototype.onCompleteRotation = function () {};
-
-    /**
-     * Calculate the new angle a sprite needs to have to look at a position x y.
-     * @param sprite
-     * @param x
-     * @param y
-     */
-    Character.prototype.getFinalAngle = function (sprite, x, y) {
-        // Calculate the angle between the two points and the Y axis.
-        var angle = (Math.atan2(y - sprite.y, x - sprite.x) * 180 / Math.PI) + 90;
-
-        // If the angle is negative, turn it into 360 based.
-        if (angle < 0) {
-            angle = 360 + angle;
-        }
-
-        return angle;
+    Character.prototype.onCompleteMovement = function () {
+        this.animations.play('standby');
     };
 
     /**
-     * Create an explosion animation and kill the sprite.
+     * Add damage to the character.
+     * @param amount
      */
-    Character.prototype.killWithAnimation = function (animationName) {
-        var self = this;
+    Character.prototype.addDamage = function (amount) {
+        this.setHealth(this.getHealth() - amount / this.resistance);
+        this.receiveShot();
+        if (this.getHealth() < 1) {
+            this.die();
+        }
+    };
 
-        if (!self.alive) {
+    /**
+     * Character dies.
+     * Mark the sprite as dead, remove the healthbar and play dying animation.
+     */
+    Character.prototype.die = function () {
+        if (!this.isAlive()) {
             return;
         }
 
-        self.alive = false;
+        this.healthBar.kill();
+        this.kill();
 
-        self.loadTexture(animationName, 0);
-        self.animations.add(animationName);
-        // To play the animation with the new texture ( 'key', frameRate, loop, killOnComplete)
-        self.animations.play(animationName, 30, false, true);
-        self.animations.currentAnim.onComplete.add(function () {
-            self.kill();
-            Print.log(['Killed:', self]);
-        }, this);
+        var death = this.game.add.sprite(this.position.x, this.position.y, 'death');
+        death.anchor.setTo(0.5);
+        death.animations.add('death');
+        death.animations.play('death', 40, false, true);
     };
 
     /**
-     * Calculate how much a sprite has to rotate to look at a position x, y.
-     * @param sprite
-     * @param x
-     * @param y
-     * @returns {string}
+     * Play shot animation in the character.
      */
-    Character.prototype.getRotationAngle = function (sprite, x, y) {
-        var self = this;
-
-        var angle = self.getFinalAngle(sprite, x, y);
-
-        // Calculate the angle to rotate.
-        var rotationAngle = parseInt(angle - sprite.angle, 10) % 360;
-
-        // If we're going to turn more than 180 degrees, turn anti-clockwise.
-        if (rotationAngle > 180) {
-            rotationAngle = -(360 - rotationAngle);
-        }
-
-        // Format it to a string with either `+` or `-`.
-        rotationAngle = rotationAngle > 0 ? '+' + String(rotationAngle) : '-' + String(Math.abs(rotationAngle));
-
-        return String(rotationAngle);
+    Character.prototype.receiveShot = function () {
+        var impact = this.game.add.sprite(
+            this.game.rnd.integerInRange(this.position.x - this.width / 2, this.position.x + this.width / 2),
+            this.game.rnd.integerInRange(this.position.y - this.height / 2, this.position.y + this.height / 2),
+            'impact');
+        impact.anchor.setTo(0.5);
+        impact.animations.add('impact');
+        impact.animations.play('impact', 20, false, true);
     };
 
     /**
-     * Helper function to return a random set of coordinates based in the world
-     * size.
-     * @returns {{x: number, y: number}}
+     * Character's update method.
      */
-    Character.getRandomWorldCoordinates = function () {
-        return {
-            x: 120 + (Math.random() * config.worldWidth - 120),
-            y: 120 + (Math.random() * config.worldHeight - 120)
+    Character.prototype.update = function () {
+        // If there is a desired destination and the spaceship reaches it,
+        // change its velocity to 0.
+        if (this.desiredDestination) {
+            var distanceToDestination = this.position.distance(this.desiredDestination, true);
+            if (distanceToDestination < 50) {
+                this.desiredDestination = null;
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 0;
+                this.onCompleteMovement();
+            }
         }
+
+        // Update healthbar position
+        this.healthBar.x = Math.floor(this.x);
+        this.healthBar.y = Math.floor(this.y - this.height + 30);
+        this.healthBar.setText(this.getHealth());
+        this.healthBar.style.fill = Utils.getColourForValue(this.getHealth());
     };
 
     Phaser.Character = Character;

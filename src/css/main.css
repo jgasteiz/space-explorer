@@ -9,7 +9,7 @@ body {
     background: #000;
     height: 100%;
     margin: 0;
-    padding: 60px 20px;
+    padding: 0;
 }
 
 * {
@@ -19,13 +19,4 @@ body {
 ::selection {
     background: #b3d4fc;
     text-shadow: none;
-}
-
-/*
-    Game styles
-*/
-.game-container {
-    box-shadow: 0 2px 120px 20px #888;
-    margin: 0 auto;
-    width: 980px;
 }
