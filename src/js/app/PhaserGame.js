@@ -1,6 +1,7 @@
 define([
     'Phaser',
     'modules/Config',
+    'extensions/PowerUp',
     'extensions/Spaceship',
     'extensions/Alien'
 ], function (Phaser, Config) {

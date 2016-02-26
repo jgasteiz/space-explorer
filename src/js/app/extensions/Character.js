@@ -9,7 +9,7 @@ define([
 
     /**
      * Character constructor method.
-     * Initialise the sprite, the bullets and add the sprite to the game.
+     * Initialise the sprite, its properties and add the sprite to the game.
      * @param game
      * @param x
      * @param y
@@ -30,9 +30,6 @@ define([
         // Animations
         this.animations.add('move');
         this.animations.add('standby');
-
-        // Character properties
-
 
         // Healthbar
         this.healthBar = game.add.text(0, 0, this.health,
@@ -79,7 +76,7 @@ define([
      * @param extraHealth
      */
     Character.prototype.addHealth = function (extraHealth) {
-        if (extraHealth < 0) {
+        if (extraHealth > 0) {
             var newHealth = Phaser.Math.min(this.getHealth() + extraHealth, this.maxHealth);
             this.setHealth(newHealth);
         }
@@ -162,6 +159,16 @@ define([
         this.receiveShot();
         if (this.getHealth() < 1) {
             this.die();
+        }
+    };
+
+    /**
+     * Add powerUp to the character.
+     * @param powerUp
+     */
+    Character.prototype.addPowerUp = function (powerUp) {
+        if (powerUp.getType() === Phaser.PowerUp.HEALTH) {
+            this.addHealth(powerUp.getValue());
         }
     };
 

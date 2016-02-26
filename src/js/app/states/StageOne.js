@@ -10,6 +10,7 @@ define([
         config,
         collisions,
         spaceship,
+        powerUps,
         aliens;
 
     var StageOne = function (_game) {
@@ -43,6 +44,12 @@ define([
             aliens = game.add.group();
             aliens.enableBody = true;
 
+            // Create some power ups
+            powerUps = game.add.group();
+            powerUps.enableBody = true;
+
+            Utils.spawnPowerUps(game, powerUps, config);
+
             // Spawn the aliens
             Utils.spawnAliensInGame(game, aliens, config);
 
@@ -50,7 +57,7 @@ define([
             game.camera.follow(spaceship);
 
             // Initialise the collisions module
-            collisions = new Collisions(game, aliens, spaceship);
+            collisions = new Collisions(game, aliens, spaceship, powerUps);
         },
         update: function () {
             spaceship.update();

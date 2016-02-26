@@ -2,10 +2,11 @@ define([
     'modules/Config'
 ], function (Config) {
 
-    function Collisions (game, aliens, spaceship) {
+    function Collisions (game, aliens, spaceship, powerUps) {
         this.game = game;
         this.aliens = aliens;
         this.spaceship = spaceship;
+        this.powerUps = powerUps;
     }
 
     Collisions.prototype.update = function () {
@@ -18,10 +19,15 @@ define([
         }, null, this);
 
         // When an alien overlaps the spaceship, damage the spaceship.
-        this.game.physics.arcade.overlap(this.spaceship, this.aliens, function (bullet, alien) {
+        this.game.physics.arcade.overlap(this.spaceship, this.aliens, function (spaceship, alien) {
             if (alien.isAlive()) {
-                this.spaceship.addDamage(alien.getAttackValue());
+                spaceship.addDamage(alien.getAttackValue());
             }
+        }, null, this);
+
+        this.game.physics.arcade.overlap(this.spaceship, this.powerUps, function (spaceship, powerUp) {
+            spaceship.addPowerUp(powerUp);
+            powerUp.kill();
         }, null, this);
     };
 
