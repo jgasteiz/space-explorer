@@ -66,6 +66,11 @@ define([
     Spaceship.prototype.update = function () {
         Phaser.Character.prototype.update.call(this);
 
+        if (!this.isAlive()) {
+            // TODO: Game over
+            return;
+        }
+
         // Listen for mouse input and update the spaceship.
         if (this.game.input.activePointer.isDown && this.game.input.activePointer.isMouse) {
             var mousePointer = this.game.input.mousePointer;

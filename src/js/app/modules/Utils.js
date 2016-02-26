@@ -1,4 +1,4 @@
-define([], function () {
+define(['Phaser'], function (Phaser) {
 
     return {
         /**
@@ -79,13 +79,22 @@ define([], function () {
                     'alien'
                 );
 
-                // If a group was specified, add the alien to the group.
-                if (group) {
-                    group.add(alien);
-                }
+                group.add(alien);
 
                 // Move the alien
                 alien.moveAroundWorld();
+            }
+        },
+
+        spawnPowerUps: function (game, group, config) {
+            for (var i = 0; i < 5; i++) {
+                group.add(new Phaser.PowerUp(
+                    game,
+                    game.rnd.integerInRange(100, config.worldWidth - 100),
+                    game.rnd.integerInRange(100, config.worldHeight - 100),
+                    'medkit',
+                    Phaser.PowerUp.HEALTH)
+                );
             }
         }
     };

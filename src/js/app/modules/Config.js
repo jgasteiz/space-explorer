@@ -35,6 +35,15 @@ define(function () {
                 speed: 300,
                 strength: 1.2
             };
+        },
+        getPowerUps: function () {
+            return {
+                health: 100,
+                radioactive: -25
+            }
+        },
+        getPowerUpValue: function (powerUpType) {
+            return this.getPowerUps()[powerUpType];
         }
     };
 });
