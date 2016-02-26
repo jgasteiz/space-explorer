@@ -53,11 +53,6 @@ define([
             collisions = new Collisions(game, aliens, spaceship);
         },
         update: function () {
-            if (!spaceship.isAlive()) {
-                // TODO: Game over
-                return;
-            }
-
             spaceship.update();
             collisions.update();
         },
