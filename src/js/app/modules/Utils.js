@@ -70,6 +70,8 @@ define(['Phaser'], function (Phaser) {
          * @param config
          */
         spawnAliensInGame: function (game, group, config) {
+            var aliens = game.add.group();
+            aliens.enableBody = true;
             // Spawn `numAliens` number of aliens.
             for (var i = 0; i < config.numAliens; i++) {
                 var alien = new Phaser.Alien(
@@ -79,16 +81,19 @@ define(['Phaser'], function (Phaser) {
                     'alien'
                 );
 
-                group.add(alien);
+                aliens.add(alien);
 
                 // Move the alien
                 alien.moveAroundWorld();
             }
+            return aliens;
         },
 
         spawnPowerUps: function (game, group, config) {
+            var powerUps = game.add.group();
+            powerUps.enableBody = true;
             for (var i = 0; i < 5; i++) {
-                group.add(new Phaser.PowerUp(
+                powerUps.add(new Phaser.PowerUp(
                     game,
                     game.rnd.integerInRange(100, config.worldWidth - 100),
                     game.rnd.integerInRange(100, config.worldHeight - 100),
@@ -96,6 +101,7 @@ define(['Phaser'], function (Phaser) {
                     Phaser.PowerUp.HEALTH)
                 );
             }
+            return powerUps;
         }
     };
 });

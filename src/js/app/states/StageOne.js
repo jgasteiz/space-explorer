@@ -40,18 +40,11 @@ define([
                 'spaceship',
                 0);
 
-            // Create some aliens
-            aliens = game.add.group();
-            aliens.enableBody = true;
-
             // Create some power ups
-            powerUps = game.add.group();
-            powerUps.enableBody = true;
+            powerUps = Utils.spawnPowerUps(game, powerUps, config);
 
-            Utils.spawnPowerUps(game, powerUps, config);
-
-            // Spawn the aliens
-            Utils.spawnAliensInGame(game, aliens, config);
+            // Create some aliens
+            aliens = Utils.spawnAliensInGame(game, aliens, config);
 
             // The camera should follow the spaceship
             game.camera.follow(spaceship);
