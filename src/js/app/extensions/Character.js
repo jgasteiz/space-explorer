@@ -41,7 +41,7 @@ define([
 
         // Select character if clicked on it.
         this.events.onInputDown.add(function (sprite, pointer) {
-            if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+            if (!this.isSelectable || pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
                 return;
             }
             this.selectCharacter();
@@ -257,7 +257,7 @@ define([
         this.healthBar.y = Math.floor(this.y - this.height + 30);
         this.healthBar.setText(this.getHealth());
         var c = Utils.getRgbColourFromValue(this.getHealth());
-        this.healthBar.style.fill = 'rgba(' + c.r + ', ' + c.g + ', ' + c.b + ', ' + this.isSelected ? 1 : 0.5 + ')';
+        this.healthBar.style.fill = 'rgba(' + c.r + ', ' + c.g + ', ' + c.b + ', ' + (this.isSelected || !this.isSelectable ? 1 : 0.5) + ')';
     };
 
     /**
