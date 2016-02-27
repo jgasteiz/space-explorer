@@ -14,6 +14,7 @@ define(function () {
         },
         getCharacterConfig: function () {
             return {
+                characterName: 'Character',
                 speed: 200,
                 maxHealth: 100,
                 health: 100,
@@ -26,12 +27,14 @@ define(function () {
         },
         getAlienConfig: function () {
             return {
+                characterName: 'Alien',
                 speed: 60,
                 attackValue: 1
             };
         },
         getSpaceshipConfig: function () {
             return {
+                characterName: 'Spaceship',
                 speed: 300,
                 strength: 1.2
             };
