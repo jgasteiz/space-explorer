@@ -44,8 +44,11 @@ define([
         var lastDate = lastBullet ? lastBullet.date + this.fireDelay : 0;
 
         if (lastDate < new Date().getTime()) {
-            var bullet = this.bulletsGroup.create(this.position.x, this.body.position.y + this.body.height / 2, 'bullet');
-            bullet.anchor.x = 1;
+            // The bullet should spawn in the front of the spaceship..
+            var headPosition = this.getHeadPosition(),
+                bullet = this.bulletsGroup.create(headPosition.x, headPosition.y, 'bullet');
+
+            bullet.anchor.x = 0.5;
             bullet.anchor.y = 1;
             bullet.outOfBoundsKill = true;
             bullet.checkWorldBounds = true;
