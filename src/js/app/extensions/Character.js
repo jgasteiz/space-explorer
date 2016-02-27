@@ -27,14 +27,26 @@ define([
         this.input.useHandCursor = true;
         this.body.collideWorldBounds = true;
 
+        // Boolean to determine whether the character is selected or not.
+        this.isSelected = false;
+
         // Animations
         this.animations.add('move');
         this.animations.add('standby');
 
         // Healthbar
         this.healthBar = game.add.text(0, 0, this.health,
-            {font: '18px Arial', align: 'center', fill: '#00ff00'});
+            {font: '18px Arial', align: 'center', fill: 'rgba(0, 255, 0, 0.2)'});
         this.healthBar.anchor.set(0.5);
+
+        // Select character if clicked on it.
+        this.events.onInputDown.add(function (sprite, pointer) {
+            if (!this.isSelectable || pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+                return;
+            }
+            this.selectCharacter();
+            this.game.selectedUnits.push(this);
+        }, this);
 
         // Add to the game
         game.add.existing(this);
@@ -42,6 +54,13 @@ define([
 
     Character.prototype = Object.create(Phaser.Sprite.prototype);
     Character.prototype.constructor = Character;
+
+    /**
+     * Return the character name property.
+     */
+    Character.prototype.getCharacterName = function () {
+        return this.characterName;
+    };
 
     /**
      * Initialise character properties from a config object.
@@ -53,6 +72,20 @@ define([
                 this[prop] = characterConfig[prop];
             }
         }
+    };
+
+    /**
+     * Mark the isSelected flag as true.
+     */
+    Character.prototype.selectCharacter = function () {
+        this.isSelected = true;
+    };
+
+    /**
+     * Mark the isSelected flag as false.
+     */
+    Character.prototype.deselectCharacter = function () {
+        this.isSelected = false;
     };
 
     /**
@@ -223,7 +256,49 @@ define([
         this.healthBar.x = Math.floor(this.x);
         this.healthBar.y = Math.floor(this.y - this.height + 30);
         this.healthBar.setText(this.getHealth());
-        this.healthBar.style.fill = Utils.getColourForValue(this.getHealth());
+        var c = Utils.getRgbColourFromValue(this.getHealth());
+        this.healthBar.style.fill = 'rgba(' + c.r + ', ' + c.g + ', ' + c.b + ', ' + (this.isSelected || !this.isSelectable ? 1 : 0.5) + ')';
+    };
+
+    /**
+     * Return the x,y position of the head of the sprite.
+     * @param angle - if the angle is specified, use this instead of the sprite current angle.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getHeadPosition = function (angle) {
+        var angleInRadians = this.rotation;
+        if (angle) {
+            angleInRadians = angle;
+        }
+        var angle = 2 * Math.PI - angleInRadians - 3 * Math.PI / 2;
+        return {
+            x: this.position.x + (Math.cos(angle) * this.width / 2),
+            y: this.position.y - (Math.sin(angle) * this.height / 2)
+        };
+    };
+
+    /**
+     * Return the x,y position of the tail of the sprite.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getTailPosition = function () {
+        return this.getHeadPosition(this.rotation + Math.PI);
+    };
+
+    /**
+     * Return the x,y position of the tail of the sprite.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getRightCenterPosition = function () {
+        return this.getHeadPosition(this.rotation + Math.PI / 2);
+    };
+
+    /**
+     * Return the x,y position of the tail of the sprite.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getLeftCenterPosition = function () {
+        return this.getHeadPosition(this.rotation - Math.PI / 2);
     };
 
     Phaser.Character = Character;

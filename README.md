@@ -11,3 +11,5 @@ Some assets taken from the [Phaser Examples Github respository](https://github.c
 - `bower install`
 - `npm install`
 - `gulp webserver`
+
+## A deployed version of the game can be played in [its github page](http://jgasteiz.github.io/space-explorer/src/)

@@ -25,6 +25,7 @@ define([
             }
         }, null, this);
 
+        // When the spaceship overlaps a powerup, grab it.
         this.game.physics.arcade.overlap(this.spaceship, this.powerUps, function (spaceship, powerUp) {
             spaceship.addPowerUp(powerUp);
             powerUp.kill();

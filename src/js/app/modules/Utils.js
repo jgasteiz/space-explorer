@@ -10,7 +10,7 @@ define(['Phaser'], function (Phaser) {
          */
         getColourForValue: function (value) {
             if (value > 80) {
-                return '#0f0';
+                return '#00ff00';
             } else if (value > 60) {
                 return '#ffe500';
             } else if (value > 40) {
@@ -18,7 +18,23 @@ define(['Phaser'], function (Phaser) {
             } else if (value > 25) {
                 return '#ff9e00';
             }
-            return '#f00';
+            return '#ff0000';
+        },
+
+        getRgbColourFromValue: function (value) {
+            var hexColour = this.getColourForValue(value),
+                result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColour);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        },
+
+        getSelectedUnitsSummary: function (selectedUnits) {
+            return selectedUnits.map(function (item, whatever, lel, lol) {
+                return item.getCharacterName();
+            });
         },
 
         /**
@@ -70,6 +86,8 @@ define(['Phaser'], function (Phaser) {
          * @param config
          */
         spawnAliensInGame: function (game, group, config) {
+            var aliens = game.add.group();
+            aliens.enableBody = true;
             // Spawn `numAliens` number of aliens.
             for (var i = 0; i < config.numAliens; i++) {
                 var alien = new Phaser.Alien(
@@ -79,16 +97,19 @@ define(['Phaser'], function (Phaser) {
                     'alien'
                 );
 
-                group.add(alien);
+                aliens.add(alien);
 
                 // Move the alien
                 alien.moveAroundWorld();
             }
+            return aliens;
         },
 
         spawnPowerUps: function (game, group, config) {
+            var powerUps = game.add.group();
+            powerUps.enableBody = true;
             for (var i = 0; i < 5; i++) {
-                group.add(new Phaser.PowerUp(
+                powerUps.add(new Phaser.PowerUp(
                     game,
                     game.rnd.integerInRange(100, config.worldWidth - 100),
                     game.rnd.integerInRange(100, config.worldHeight - 100),
@@ -96,6 +117,7 @@ define(['Phaser'], function (Phaser) {
                     Phaser.PowerUp.HEALTH)
                 );
             }
+            return powerUps;
         }
     };
 });
