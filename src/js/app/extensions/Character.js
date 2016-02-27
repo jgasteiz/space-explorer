@@ -226,5 +226,46 @@ define([
         this.healthBar.style.fill = Utils.getColourForValue(this.getHealth());
     };
 
+    /**
+     * Return the x,y position of the head of the sprite.
+     * @param angle - if the angle is specified, use this instead of the sprite current angle.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getHeadPosition = function (angle) {
+        var angleInRadians = this.rotation;
+        if (angle) {
+            angleInRadians = angle;
+        }
+        var angle = 2 * Math.PI - angleInRadians - 3 * Math.PI / 2;
+        return {
+            x: this.position.x + (Math.cos(angle) * this.width / 2),
+            y: this.position.y - (Math.sin(angle) * this.height / 2)
+        };
+    };
+
+    /**
+     * Return the x,y position of the tail of the sprite.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getTailPosition = function () {
+        return this.getHeadPosition(this.rotation + Math.PI);
+    };
+
+    /**
+     * Return the x,y position of the tail of the sprite.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getRightCenterPosition = function () {
+        return this.getHeadPosition(this.rotation + Math.PI / 2);
+    };
+
+    /**
+     * Return the x,y position of the tail of the sprite.
+     * @return {object} {x: float, y: float}
+     */
+    Character.prototype.getLeftCenterPosition = function () {
+        return this.getHeadPosition(this.rotation - Math.PI / 2);
+    };
+
     Phaser.Character = Character;
 });
