@@ -64,23 +64,23 @@ define([
 
             // Move the camera
             if (cursors.up.isDown) {
-                game.camera.y -= 10;
+                game.camera.y -= 12;
             } else if (cursors.down.isDown) {
-                game.camera.y += 10;
+                game.camera.y += 12;
             } if (cursors.left.isDown) {
-                game.camera.x -= 10;
+                game.camera.x -= 12;
             } else if (cursors.right.isDown) {
-                game.camera.x += 10;
+                game.camera.x += 12;
             }
 
-            if (game.input.activePointer.position.x > game.width - 100) {
+            if (game.input.activePointer.position.x > game.width - 70) {
                 game.camera.x = game.camera.x + 12;
-            } else if (game.input.activePointer.position.x < 100) {
+            } else if (game.input.activePointer.position.x < 70) {
                 game.camera.x = game.camera.x - 12;
             }
-            if (game.input.activePointer.position.y > game.height - 100) {
+            if (game.input.activePointer.position.y > game.height - 70) {
                 game.camera.y = game.camera.y + 12;
-            } else if (game.input.activePointer.position.y < 100) {
+            } else if (game.input.activePointer.position.y < 70) {
                 game.camera.y = game.camera.y - 12;
             }
         },
