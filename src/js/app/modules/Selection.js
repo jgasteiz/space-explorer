@@ -8,7 +8,6 @@ define(['Phaser'], function (Phaser) {
                 return;
             }
             spaceship.deselectCharacter();
-            game.camera.unfollow();
             game.selectedUnits = [];
 
             isSelecting = true;
@@ -50,8 +49,6 @@ define(['Phaser'], function (Phaser) {
             if (rectangleArea.contains(spaceship.position.x, spaceship.position.y)) {
                 spaceship.selectCharacter();
                 game.selectedUnits.push(spaceship);
-                // The camera should follow the spaceship
-                game.camera.follow(spaceship);
             }
 
             rectangle.kill();

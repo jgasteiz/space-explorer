@@ -43,7 +43,6 @@ define([
                 game.rnd.integerInRange(100, config.worldHeight - 100),
                 'spaceship',
                 0);
-
             game.camera.focusOn(spaceship);
 
             // Create some power ups
@@ -72,6 +71,17 @@ define([
                 game.camera.x -= 10;
             } else if (cursors.right.isDown) {
                 game.camera.x += 10;
+            }
+
+            if (game.input.activePointer.position.x > game.width - 100) {
+                game.camera.x = game.camera.x + 12;
+            } else if (game.input.activePointer.position.x < 100) {
+                game.camera.x = game.camera.x - 12;
+            }
+            if (game.input.activePointer.position.y > game.height - 100) {
+                game.camera.y = game.camera.y + 12;
+            } else if (game.input.activePointer.position.y < 100) {
+                game.camera.y = game.camera.y - 12;
             }
         },
         render: function () {
