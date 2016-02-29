@@ -296,6 +296,25 @@ define([
     };
 
     /**
+     * Retrieve the coordinates of the sprite head if the rotation is being done
+     * by frames rather than by the rotation property.
+     * @returns {*}
+     */
+    Character.prototype.getHeadPositionForFrame = function () {
+        this.headPositionForFrame = [
+            {x: this.position.x, y: this.position.y - this.height / 2},
+            {x: this.position.x + this.width / 2, y: this.position.y - this.height / 2},
+            {x: this.position.x + this.width / 2, y: this.position.y},
+            {x: this.position.x + this.width / 2, y: this.position.y + this.height / 2},
+            {x: this.position.x, y: this.position.y + this.height / 2},
+            {x: this.position.x - this.width / 2, y: this.position.y + this.height / 2},
+            {x: this.position.x - this.width / 2, y: this.position.y},
+            {x: this.position.x - this.width / 2, y: this.position.y - this.height / 2}
+        ];
+        return this.headPositionForFrame[this._frame];
+    };
+
+    /**
      * Return the x,y position of the tail of the sprite.
      * @return {object} {x: float, y: float}
      */
