@@ -49,11 +49,6 @@ define([
             this.game.selectedUnits.push(this);
         }, this);
 
-        // Green circle to show up if the character is selected
-        this.selectionCircle = game.add.graphics(this.position.x, this.position.y);
-        this.selectionCircle.lineStyle(1, 0x00FF00, 0.6);
-        this.selectionCircle.drawCircle(35, 35, 70);
-        this.selectionCircle.visible = false;
 
         // Add to the game
         game.add.existing(this);
@@ -281,15 +276,6 @@ define([
         this.healthBar.setText(this.getHealth());
         var c = Utils.getRgbColourFromValue(this.getHealth());
         this.healthBar.style.fill = 'rgba(' + c.r + ', ' + c.g + ', ' + c.b + ', ' + (this.isSelected || !this.isSelectable ? 1 : 0.5) + ')';
-
-        // Show the selection circle and update its posision if the Character is selected.
-        if (this.isSelected) {
-            this.selectionCircle.visible = true;
-            this.selectionCircle.position.x = this.body.position.x - 10;
-            this.selectionCircle.position.y = this.body.position.y - 10;
-        } else {
-            this.selectionCircle.visible = false;
-        }
     };
 
     /**
