@@ -26,6 +26,7 @@ define([
         this.inputEnabled = true;
         this.input.useHandCursor = true;
         this.body.collideWorldBounds = true;
+        this.body.mass = -100;
 
         // Boolean to determine whether the character is selected or not.
         this.isSelected = false;
@@ -243,6 +244,22 @@ define([
     };
 
     /**
+     * Set body velocity to 0 and tell the parent group to notify the rest of the
+     * selected characters (within the same group) about the arrival.
+     * @param notifySiblings
+     */
+    Character.prototype.arriveToDestination = function (notifySiblings) {
+        this.desiredDestination = null;
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+        this.onCompleteMovement();
+
+        if (notifySiblings && this.parent.hasOwnProperty('notifyActiveChildrenOfArrival')) {
+            this.parent.notifyActiveChildrenOfArrival();
+        }
+    };
+
+    /**
      * Character's update method.
      */
     Character.prototype.update = function () {
@@ -251,10 +268,7 @@ define([
         if (this.desiredDestination) {
             var distanceToDestination = this.position.distance(this.desiredDestination, true);
             if (distanceToDestination < 50) {
-                this.desiredDestination = null;
-                this.body.velocity.x = 0;
-                this.body.velocity.y = 0;
-                this.onCompleteMovement();
+                this.arriveToDestination(true);
             }
         }
 
@@ -285,10 +299,10 @@ define([
         if (angle) {
             angleInRadians = angle;
         }
-        var angle = 2 * Math.PI - angleInRadians - 3 * Math.PI / 2;
+        var newAngle = 2 * Math.PI - angleInRadians - 3 * Math.PI / 2;
         return {
-            x: this.position.x + (Math.cos(angle) * this.width / 2),
-            y: this.position.y - (Math.sin(angle) * this.height / 2)
+            x: this.position.x + (Math.cos(newAngle) * this.width / 2),
+            y: this.position.y - (Math.sin(newAngle) * this.height / 2)
         };
     };
 
