@@ -31,9 +31,15 @@ define([
         // Boolean to determine whether the character is selected or not.
         this.isSelected = false;
 
-        // Animations
-        this.animations.add('move');
-        this.animations.add('standby');
+        // Setup animations
+        this.animations.add('up', [0]);
+        this.animations.add('right', [1]);
+        this.animations.add('down', [2]);
+        this.animations.add('left', [3]);
+        this.animations.add('upright', [4]);
+        this.animations.add('rightdown', [5]);
+        this.animations.add('downleft', [6]);
+        this.animations.add('leftup', [7]);
 
         // Healthbar
         this.healthBar = game.add.text(0, 0, this.health,
@@ -48,6 +54,8 @@ define([
             this.selectCharacter();
             this.game.selectedUnits.push(this);
         }, this);
+
+        this.animations.play('rightdown', 0, true);
 
         // Move to the clicked position if the chaacter is alive and selected.
         this.game.input.activePointer.rightButton.onDown.add(function (evt) {
@@ -167,12 +175,51 @@ define([
             return;
         }
 
-        // Start move animation.
-        this.animations.play('move', 10, true);
-        // Move the spaceship to the destination and set its rotation.
-        this.rotation = this.game.physics.arcade.moveToXY(this, x, y, this.speed) + (window.Math.PI / 2);
+        // Set the frame for the direction where the character is moving.
+        this.setFrameForRotation(this.game.physics.arcade.moveToXY(this, x, y, this.speed) + (window.Math.PI / 2));
+
         // Set the desired destination.
         this.desiredDestination = {x: x, y: y};
+    };
+
+    /**
+     * Set the right frame of the sprite depending on the given rotation.
+     * @param rotation
+     */
+    Character.prototype.setFrameForRotation = function (rotation) {
+
+        this._rotation = rotation;
+
+        var degrees = rotation * 180 / Math.PI;
+        if (degrees < 0) {
+            degrees = degrees + 360;
+        }
+
+        if (degrees > 336 || degrees < 23) {
+            this.animations.play('up', 0, true);
+            this._frame = 0;
+        } else if (degrees > 22 && degrees < 68) {
+            this.animations.play('upright', 0, true);
+            this._frame = 1;
+        } else if (degrees > 67 && degrees < 113) {
+            this.animations.play('right', 0, true);
+            this._frame = 2;
+        } else if (degrees > 112 && degrees < 158) {
+            this.animations.play('rightdown', 0, true);
+            this._frame = 3;
+        } else if (degrees > 157 && degrees < 203) {
+            this.animations.play('down', 0, true);
+            this._frame = 4;
+        } else if (degrees > 202 && degrees < 248) {
+            this.animations.play('downleft', 0, true);
+            this._frame = 5;
+        } else if (degrees > 247 && degrees < 293) {
+            this.animations.play('left', 0, true);
+            this._frame = 6;
+        } else if (degrees > 292 && degrees < 337) {
+            this.animations.play('leftup', 0, true);
+            this._frame = 7;
+        }
     };
 
     /**
@@ -193,7 +240,7 @@ define([
      * Function called when the movement animation is completed.
      */
     Character.prototype.onCompleteMovement = function () {
-        this.animations.play('standby');
+        //this.animations.play('standby');
     };
 
     /**
@@ -295,7 +342,7 @@ define([
      * @return {object} {x: float, y: float}
      */
     Character.prototype.getHeadPosition = function (angle) {
-        var angleInRadians = this.rotation;
+        var angleInRadians = this._rotation;
         if (angle) {
             angleInRadians = angle;
         }

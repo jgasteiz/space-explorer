@@ -44,7 +44,7 @@ define([
 
         if (lastDate < new Date().getTime()) {
             // The bullet should spawn in the front of the spaceship..
-            var headPosition = this.getHeadPosition(),
+            var headPosition = this.getHeadPositionForFrame(),
                 bullet = this.bulletsGroup.create(headPosition.x, headPosition.y, 'bullet');
 
             bullet.anchor.x = 0.5;
