@@ -30,6 +30,7 @@ define([
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
 
         this.animations.play('rightdown', 0, true);
+        this._frameNum = 3;
     };
 
     Spaceship.prototype = Object.create(Phaser.Character.prototype);
