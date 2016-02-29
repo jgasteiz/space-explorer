@@ -43,14 +43,14 @@ define([
                 game,
                 game.rnd.integerInRange(100, config.worldWidth - 100),
                 game.rnd.integerInRange(100, config.worldHeight - 100),
-                'spaceship',
+                'battlecruiser',
                 0));
-            playerCharacters.add(new Phaser.Spaceship(
-                game,
-                playerCharacters.getAt(0).position.x + 100,
-                playerCharacters.getAt(0).position.y + 100,
-                'spaceship',
-                0));
+            //playerCharacters.add(new Phaser.Spaceship(
+            //    game,
+            //    playerCharacters.getAt(0).position.x + 100,
+            //    playerCharacters.getAt(0).position.y + 100,
+            //    'battlecruiser',
+            //    0));
 
             // TODO: create a `PlayerCharacters` class and implement this there.
             playerCharacters.notifyActiveChildrenOfArrival = function () {
@@ -60,7 +60,7 @@ define([
                     }
                 }, this);
             };
-            game.camera.focusOn(playerCharacters.getAt(1));
+            game.camera.focusOn(playerCharacters.getAt(0));
 
             // Create some power ups
             powerUps = Utils.spawnPowerUps(game, powerUps, config);
