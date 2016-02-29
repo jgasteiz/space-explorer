@@ -28,6 +28,8 @@ define([
 
         // Setup the fire key.
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
+
+        this.animations.play('rightdown', 0, true);
     };
 
     Spaceship.prototype = Object.create(Phaser.Character.prototype);

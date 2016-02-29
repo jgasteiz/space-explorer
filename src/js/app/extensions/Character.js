@@ -55,8 +55,6 @@ define([
             this.game.selectedUnits.push(this);
         }, this);
 
-        this.animations.play('rightdown', 0, true);
-
         // Move to the clicked position if the chaacter is alive and selected.
         this.game.input.activePointer.rightButton.onDown.add(function (evt) {
             if (!this.isAlive()) {
