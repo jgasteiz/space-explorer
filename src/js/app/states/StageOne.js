@@ -11,7 +11,7 @@ define([
         config,
         collisions,
         selection,
-        spaceship,
+        playerCharacters,
         powerUps,
         aliens;
 
@@ -36,14 +36,31 @@ define([
             game.starfield.inputEnabled = true;
             game.selectedUnits = [];
 
-            // Create spaceship
-            spaceship = new Phaser.Spaceship(
+            // Create spaceships
+            playerCharacters = game.add.physicsGroup();
+
+            playerCharacters.add(new Phaser.Spaceship(
                 game,
                 game.rnd.integerInRange(100, config.worldWidth - 100),
                 game.rnd.integerInRange(100, config.worldHeight - 100),
                 'spaceship',
-                0);
-            game.camera.focusOn(spaceship);
+                0));
+            playerCharacters.add(new Phaser.Spaceship(
+                game,
+                playerCharacters.getAt(0).position.x + 100,
+                playerCharacters.getAt(0).position.y + 100,
+                'spaceship',
+                0));
+
+            // TODO: create a `PlayerCharacters` class and implement this there.
+            playerCharacters.notifyActiveChildrenOfArrival = function () {
+                playerCharacters.forEach(function (child) {
+                    if (child.isSelected) {
+                        child.arriveToDestination(false);
+                    }
+                }, this);
+            };
+            game.camera.focusOn(playerCharacters.getAt(1));
 
             // Create some power ups
             powerUps = Utils.spawnPowerUps(game, powerUps, config);
@@ -52,14 +69,16 @@ define([
             aliens = Utils.spawnAliensInGame(game, aliens, config);
 
             // Initialise the Selection module
-            selection = new Selection(game, spaceship);
+            selection = new Selection(game, playerCharacters);
             // Initialise the collisions module
-            collisions = new Collisions(game, aliens, spaceship, powerUps);
+            collisions = new Collisions(game, aliens, playerCharacters, powerUps);
             // Initialise the cursors
             cursors = game.input.keyboard.createCursorKeys();
         },
         update: function () {
-            spaceship.update();
+            playerCharacters.forEach(function (spaceship) {
+                spaceship.update();
+            }, this);
             collisions.update();
 
             // Move the camera
@@ -67,7 +86,8 @@ define([
                 game.camera.y -= 12;
             } else if (cursors.down.isDown) {
                 game.camera.y += 12;
-            } if (cursors.left.isDown) {
+            }
+            if (cursors.left.isDown) {
                 game.camera.x -= 12;
             } else if (cursors.right.isDown) {
                 game.camera.x += 12;
@@ -85,15 +105,19 @@ define([
             }
         },
         render: function () {
-            game.debug.text(
-                'Health: ' + spaceship.getHealth(),
-                12,
-                20,
-                Utils.getColourForValue(spaceship.getHealth())
-            );
-            game.debug.text('FPS: ' + game.time.fps || '--', 12, 40, "#00ff00");
-            game.debug.text('Selected units: ' + Utils.getSelectedUnitsSummary(game.selectedUnits), 12, 60, "#00ff00");
-            // game.debug.body(spaceship);
+            game.debug.text('FPS: ' + game.time.fps || '--', 12, 20, "#00ff00");
+            game.debug.text('Selected units: ' + Utils.getSelectedUnitsSummary(game.selectedUnits), 12, 40, "#00ff00");
+            // Render status of all selected units.
+            var healthPosition = 60;
+            playerCharacters.forEach(function (spaceship) {
+                game.debug.text(
+                    'Health: ' + spaceship.getHealth(),
+                    12,
+                    healthPosition,
+                    Utils.getColourForValue(spaceship.getHealth())
+                );
+                healthPosition += 20;
+            }, this);
         }
     };
 

@@ -1,5 +1,5 @@
 define(['Phaser'], function (Phaser) {
-    function Selection (game, spaceship) {
+    function Selection (game, playerCharacters) {
         var isSelecting = false,
             rectangle;
 
@@ -7,7 +7,9 @@ define(['Phaser'], function (Phaser) {
             if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
                 return;
             }
-            spaceship.deselectCharacter();
+            playerCharacters.forEach(function(spaceship) {
+                spaceship.deselectCharacter();
+            }, this);
             game.selectedUnits = [];
 
             isSelecting = true;
@@ -46,10 +48,13 @@ define(['Phaser'], function (Phaser) {
                 rectangleAreaY = rectangle.position.y + rectangle.height;
             }
             var rectangleArea = new Phaser.Rectangle(rectangleAreaX, rectangleAreaY, Math.abs(rectangle.width), Math.abs(rectangle.height));
-            if (rectangleArea.contains(spaceship.position.x, spaceship.position.y)) {
-                spaceship.selectCharacter();
-                game.selectedUnits.push(spaceship);
-            }
+
+            playerCharacters.forEach(function(spaceship) {
+                if (rectangleArea.contains(spaceship.position.x, spaceship.position.y)) {
+                    spaceship.selectCharacter();
+                    game.selectedUnits.push(spaceship);
+                }
+            }, this);
 
             rectangle.kill();
         });
