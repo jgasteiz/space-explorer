@@ -270,6 +270,9 @@ define([
             if (distanceToDestination < 50) {
                 this.arriveToDestination(true);
             }
+        } else {
+            this.body.velocity.x = 0;
+            this.body.velocity.y = 0;
         }
 
         // Update healthbar position
