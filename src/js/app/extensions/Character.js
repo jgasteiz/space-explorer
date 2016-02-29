@@ -49,6 +49,17 @@ define([
             this.game.selectedUnits.push(this);
         }, this);
 
+        // Move to the clicked position if the chaacter is alive and selected.
+        this.game.input.activePointer.rightButton.onDown.add(function (evt) {
+            if (!this.isAlive()) {
+                // TODO: Game over
+                return;
+            }
+            if (!this.isSelected) {
+                return;
+            }
+            this.moveToXY(evt.parent.worldX, evt.parent.worldY);
+        }, this);
 
         // Add to the game
         game.add.existing(this);

@@ -26,24 +26,8 @@ define([
         this.bulletsGroup.enableBody = true;
         this.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
-        // Setup animations
-        this.animations.add('move', [1,2,3]);
-        this.animations.add('standby', [0]);
-
         // Setup the fire key.
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
-
-        // Move to the clicked position if the spaceship is alive and selected.
-        this.game.input.activePointer.rightButton.onDown.add(function (evt) {
-            if (!this.isAlive()) {
-                // TODO: Game over
-                return;
-            }
-            if (!this.isSelected) {
-                return;
-            }
-            this.moveToXY(evt.parent.worldX, evt.parent.worldY);
-        }, this);
     };
 
     Spaceship.prototype = Object.create(Phaser.Character.prototype);
