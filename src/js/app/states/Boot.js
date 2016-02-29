@@ -15,6 +15,7 @@ define([], function () {
             game.load.image('bullet', 'img/bullet.png');
             game.load.image('medkit', 'img/medkit.png');
             game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 50, 70, 4);
+            game.load.spritesheet('battlecruiser', 'img/battlecruiser.png', 96, 76, 8);
             game.load.image('alien', 'img/invader.png');
             game.load.spritesheet('death', 'img/explode.png', 128, 128);
             game.load.spritesheet('impact', 'img/impact.png', 32, 32);
