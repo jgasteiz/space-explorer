@@ -69,6 +69,9 @@ define([
 
         // Add to the game
         game.add.existing(this);
+
+        // Initialise the angle breakpoints.
+        this.initializeAngleBreakpoints();
     };
 
     Character.prototype = Object.create(Phaser.Sprite.prototype);
@@ -90,6 +93,22 @@ define([
             if (characterConfig.hasOwnProperty(prop)) {
                 this[prop] = characterConfig[prop];
             }
+        }
+    };
+
+    /**
+     * Given the number of specified rotation animations, calculate the angle
+     * breakpoints that will correspond to each animation frame.
+     */
+    Character.prototype.initializeAngleBreakpoints = function () {
+        if (!this.animationFrames) {
+            return;
+        }
+
+        var degreesInterval = 360 / this.animationFrames.length;
+        this.angleBreakpoins = [];
+        for (var i = 360 - degreesInterval / 2; i > 0 ; i -= degreesInterval) {
+            this.angleBreakpoins.push(i);
         }
     };
 
@@ -188,28 +207,26 @@ define([
 
         this._rotation = rotation;
 
+        // Get the angle in degrees to where the spaceship should look to.
         var degrees = rotation * 180 / Math.PI;
         if (degrees < 0) {
             degrees = degrees + 360;
         }
 
-        if (degrees > 336 || degrees < 23) {
-            this.animations.play('up', 0, true);
-        } else if (degrees > 22 && degrees < 68) {
-            this.animations.play('upright', 0, true);
-        } else if (degrees > 67 && degrees < 113) {
-            this.animations.play('right', 0, true);
-        } else if (degrees > 112 && degrees < 158) {
-            this.animations.play('rightdown', 0, true);
-        } else if (degrees > 157 && degrees < 203) {
-            this.animations.play('down', 0, true);
-        } else if (degrees > 202 && degrees < 248) {
-            this.animations.play('downleft', 0, true);
-        } else if (degrees > 247 && degrees < 293) {
-            this.animations.play('left', 0, true);
-        } else if (degrees > 292 && degrees < 337) {
-            this.animations.play('leftup', 0, true);
+        // Get the right animation frame depending on the angle.
+        var direction;
+        this.angleBreakpoins.forEach(function (breakpoint, index) {
+            if (!direction && degrees > breakpoint) {
+                direction = this.animationFrames[index];
+            }
+        }, this);
+
+        if (!direction) {
+            direction = this.animationFrames[0];
         }
+
+        // Set the animation frame.
+        this.animations.play(direction, 0, true);
     };
 
     /**

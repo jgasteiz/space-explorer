@@ -23,7 +23,19 @@ define(function () {
                 strength: 1,
                 resistance: 1,
                 fireDelay: 100,
-                fireSpeed: 600
+                fireSpeed: 600,
+                // It's important to keep these animations counterclockwise
+                // for the `setFrameForRotation` method to work correctly.
+                animationFrames: [
+                    'up',
+                    'leftup',
+                    'left',
+                    'downleft',
+                    'down',
+                    'rightdown',
+                    'right',
+                    'upright'
+                ]
             }
         },
         getAlienConfig: function () {
