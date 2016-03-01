@@ -28,54 +28,74 @@ define([
         this.body.collideWorldBounds = true;
         this.body.mass = -100;
 
-        // Boolean to determine whether the character is selected or not.
-        this.isSelected = false;
-
-        // Setup animations
-        this.animations.add('up', [0]);
-        this.animations.add('right', [1]);
-        this.animations.add('down', [2]);
-        this.animations.add('left', [3]);
-        this.animations.add('upright', [4]);
-        this.animations.add('rightdown', [5]);
-        this.animations.add('downleft', [6]);
-        this.animations.add('leftup', [7]);
-
         // Healthbar
-        this.healthBar = game.add.text(0, 0, this.health,
-            {font: '18px Arial', align: 'center', fill: 'rgba(0, 255, 0, 0.2)'});
-        this.healthBar.anchor.set(0.5);
-
-        // Select character if clicked on it.
-        this.events.onInputDown.add(function (sprite, pointer) {
-            if (!this.isSelectable || pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
-                return;
-            }
-            this.selectCharacter();
-            this.game.selectedUnits.push(this);
-        }, this);
-
-        // Move to the clicked position if the chaacter is alive and selected.
-        this.game.input.activePointer.rightButton.onDown.add(function (evt) {
-            if (!this.isAlive()) {
-                // TODO: Game over
-                return;
-            }
-            if (!this.isSelected) {
-                return;
-            }
-            this.moveToXY(evt.parent.worldX, evt.parent.worldY);
-        }, this);
-
-        // Add to the game
-        game.add.existing(this);
+        this.initializeHealthBar();
 
         // Initialise the angle breakpoints.
         this.initializeAngleBreakpoints();
+
+        // Initialize mouse click events.
+        this.initializeMouseEvents();
+
+        // Add character to the game
+        game.add.existing(this);
     };
 
     Character.prototype = Object.create(Phaser.Sprite.prototype);
     Character.prototype.constructor = Character;
+
+    /**
+     * Initialize the mouse events for the character:
+     * - right click on another character: if it's an enemy and characters
+     *   are selected, set as active enemy.
+     * - left click on character: select character.
+     * - right click on game background sprite (starfield): go to that position
+     *   in the world.
+     */
+    Character.prototype.initializeMouseEvents = function () {
+        // Set up click events on character
+        this.events.onInputDown.add(function (_, pointer) {
+            if (pointer.button === Phaser.Mouse.LEFT_BUTTON) {
+                // If the character is selectable, select it.
+                if (this.isSelectable) {
+                    this.selectCharacter();
+                    this.game.selectedUnits = [this];
+                }
+            } else if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+                // If the character is an enemy and there are any selected
+                // units, set clicked character as active target.
+                if (this.enemy && this.game.selectedUnits.length > 0) {
+                    this.game.selectedUnits.forEach(function (character) {
+                        character.setActiveTarget(this);
+                    }, this);
+                }
+            }
+        }, this);
+
+        // Move to the clicked position if the chaacter is alive and selected.
+        // If the scenario is clicked, go to the clicked position.
+        this.game.starfield.events.onInputDown.add(function (sprite, pointer) {
+            if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+                if (!this.isAlive()) {
+                    // TODO: Game over
+                    return;
+                }
+                if (!this.isSelected) {
+                    return;
+                }
+                this.moveToXY(pointer.worldX, pointer.worldY);
+            }
+        }, this);
+    };
+
+    /**
+     * Initialize the character's health bar.
+     */
+    Character.prototype.initializeHealthBar = function () {
+        this.healthBar = this.game.add.text(0, 0, this.getHealth(),
+            {font: '18px Arial', align: 'center', fill: 'rgba(0, 255, 0, 0.2)'});
+        this.healthBar.anchor.set(0.5);
+    };
 
     /**
      * Return the character name property.
@@ -139,7 +159,7 @@ define([
      * @param newHealth
      */
     Character.prototype.setHealth = function (newHealth) {
-        this.health = newHealth;
+        this.health = parseInt(newHealth, 10);
     };
 
     /**
@@ -159,27 +179,6 @@ define([
      */
     Character.prototype.isAlive = function () {
         return this.alive;
-    };
-
-    /**
-     * Attach another character.
-     * @param character
-     */
-    Character.prototype.attack = function (character) {
-        Print.log('Atacking ' + character + ': to be implemented');
-    };
-
-    Character.prototype.getAttackValue = function () {
-        return this.strength * this.attackValue;
-    };
-
-    /**
-     * Patrol around a given position x,y.
-     * @param x
-     * @param y
-     */
-    Character.prototype.patrol = function (x, y) {
-        Print.log('Patroling around ' + x +  ', ' + y + ': to be implemented');
     };
 
     /**
@@ -247,7 +246,7 @@ define([
      * Function called when the movement animation is completed.
      */
     Character.prototype.onCompleteMovement = function () {
-        //this.animations.play('standby');
+        Print.log('on complete movement');
     };
 
     /**
@@ -341,6 +340,47 @@ define([
         this.healthBar.setText(this.getHealth());
         var c = Utils.getRgbColourFromValue(this.getHealth());
         this.healthBar.style.fill = 'rgba(' + c.r + ', ' + c.g + ', ' + c.b + ', ' + (this.isSelected || !this.isSelectable ? 1 : 0.5) + ')';
+
+        // Attack the active target
+        this.attackActiveTarget();
+    };
+
+    /**
+     * Set an active target.
+     * @param character
+     */
+    Character.prototype.setActiveTarget = function (character) {
+        this.activeTarget = character;
+    };
+
+    /**
+     * Attack the active target, if there's any.
+     */
+    Character.prototype.attackActiveTarget = function () {
+        if (this.activeTarget) {
+            if (!this.activeTarget.isAlive()) {
+                this.activeTarget = null;
+            } else {
+                this.attack(this.activeTarget.position.x, this.activeTarget.position.y);
+            }
+        }
+    };
+
+    /**
+     * Attack a given position
+     * @param x
+     * @param y
+     */
+    Character.prototype.attack = function (x, y) {
+        Print.log('To be implemented');
+    };
+
+    /**
+     * Get the character's attack value multiplied by its strength.
+     * @returns {number}
+     */
+    Character.prototype.getAttackValue = function () {
+        return this.strength * this.attackValue;
     };
 
     /**
