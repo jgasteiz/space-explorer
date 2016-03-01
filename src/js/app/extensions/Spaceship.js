@@ -30,7 +30,7 @@ define([
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
 
         this.animations.play('rightdown', 0, true);
-        this._frameNum = 3;
+        this._rotation = 3 * Math.PI / 4;
     };
 
     Spaceship.prototype = Object.create(Phaser.Character.prototype);
@@ -47,7 +47,7 @@ define([
 
         if (lastDate < new Date().getTime()) {
             // The bullet should spawn in the front of the spaceship..
-            var headPosition = this.getHeadPositionForFrame(),
+            var headPosition = this.getHeadPosition(),
                 bullet = this.bulletsGroup.create(headPosition.x, headPosition.y, 'bullet');
 
             bullet.anchor.x = 0.5;

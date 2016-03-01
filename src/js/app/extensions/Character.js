@@ -195,28 +195,20 @@ define([
 
         if (degrees > 336 || degrees < 23) {
             this.animations.play('up', 0, true);
-            this._frameNum = 0;
         } else if (degrees > 22 && degrees < 68) {
             this.animations.play('upright', 0, true);
-            this._frameNum = 1;
         } else if (degrees > 67 && degrees < 113) {
             this.animations.play('right', 0, true);
-            this._frameNum = 2;
         } else if (degrees > 112 && degrees < 158) {
             this.animations.play('rightdown', 0, true);
-            this._frameNum = 3;
         } else if (degrees > 157 && degrees < 203) {
             this.animations.play('down', 0, true);
-            this._frameNum = 4;
         } else if (degrees > 202 && degrees < 248) {
             this.animations.play('downleft', 0, true);
-            this._frameNum = 5;
         } else if (degrees > 247 && degrees < 293) {
             this.animations.play('left', 0, true);
-            this._frameNum = 6;
         } else if (degrees > 292 && degrees < 337) {
             this.animations.play('leftup', 0, true);
-            this._frameNum = 7;
         }
     };
 
@@ -349,25 +341,6 @@ define([
             x: this.position.x + (Math.cos(newAngle) * this.width / 2),
             y: this.position.y - (Math.sin(newAngle) * this.height / 2)
         };
-    };
-
-    /**
-     * Retrieve the coordinates of the sprite head if the rotation is being done
-     * by frames rather than by the rotation property.
-     * @returns {*}
-     */
-    Character.prototype.getHeadPositionForFrame = function () {
-        this.headPositionForFrame = [
-            {x: this.position.x, y: this.position.y - this.height / 2},
-            {x: this.position.x + this.width / 2, y: this.position.y - this.height / 2},
-            {x: this.position.x + this.width / 2, y: this.position.y},
-            {x: this.position.x + this.width / 2, y: this.position.y + this.height / 2},
-            {x: this.position.x, y: this.position.y + this.height / 2},
-            {x: this.position.x - this.width / 2, y: this.position.y + this.height / 2},
-            {x: this.position.x - this.width / 2, y: this.position.y},
-            {x: this.position.x - this.width / 2, y: this.position.y - this.height / 2}
-        ];
-        return this.headPositionForFrame[this._frameNum];
     };
 
     /**
