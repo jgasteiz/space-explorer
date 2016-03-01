@@ -8,22 +8,28 @@ define(function () {
                 height: 720,
                 worldHeight: 2048,
                 worldWidth: 2048,
-                bulletSpeed: 8,
                 numAliens: 16
             };
         },
         getCharacterConfig: function () {
             return {
                 characterName: 'Character',
-                isSelectable: false,
                 speed: 200,
                 maxHealth: 100,
                 health: 100,
-                attackValue: 20,
+                attackValue: 6,
                 strength: 1,
                 resistance: 1,
-                fireDelay: 100,
-                fireSpeed: 600,
+                fireDelay: 400,
+                fireSpeed: 900,
+                // Flag to determine whether the character is an enemy or not.
+                enemy: false,
+                // Flag to determine whether the character can be selected or not.
+                isSelectable: false,
+                // Flag to determine whether the character is selected or not.
+                isSelected: false,
+                // Active target to determine whether the unit should be attacking or not.
+                activeTarget: null,
                 // It's important to keep these animations counterclockwise
                 // for the `setFrameForRotation` method to work correctly.
                 animationFrames: [
@@ -41,6 +47,8 @@ define(function () {
         getAlienConfig: function () {
             return {
                 characterName: 'Alien',
+                isSelectable: false,
+                enemy: true,
                 speed: 60,
                 attackValue: 1
             };
@@ -49,6 +57,7 @@ define(function () {
             return {
                 characterName: 'Spaceship',
                 isSelectable: true,
+                enemy: false,
                 speed: 300,
                 strength: 1.2
             };
