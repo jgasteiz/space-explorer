@@ -8,7 +8,8 @@ define(function () {
                 height: 720,
                 worldHeight: 2048,
                 worldWidth: 2048,
-                numAliens: 16
+                numAliens: 16,
+                numSpacehips: 4
             };
         },
         getCharacterConfig: function () {
