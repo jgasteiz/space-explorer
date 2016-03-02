@@ -58,6 +58,9 @@ define([
             if (pointer.button === Phaser.Mouse.LEFT_BUTTON) {
                 // If the character is selectable, select it.
                 if (this.isSelectable) {
+                    this.game.selectedUnits.forEach(function (unit) {
+                        unit.deselectCharacter();
+                    });
                     this.selectCharacter();
                     this.game.selectedUnits = [this];
                 }
