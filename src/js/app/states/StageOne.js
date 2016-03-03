@@ -39,28 +39,23 @@ define([
             // Create spaceships
             playerCharacters = game.add.physicsGroup();
 
-            playerCharacters.add(new Phaser.Spaceship(
-                game,
-                game.rnd.integerInRange(100, config.worldWidth - 100),
-                game.rnd.integerInRange(100, config.worldHeight - 100),
-                'spaceship',
-                0));
-            playerCharacters.add(new Phaser.Spaceship(
-                game,
-                playerCharacters.getAt(0).position.x + 100,
-                playerCharacters.getAt(0).position.y + 100,
-                'spaceship',
-                0));
+            // Spawn as many spaceships as it's specified in the config.
+            for (var i = 0; i < config.numSpacehips; i++) {
+                playerCharacters.add(new Phaser.Spaceship(
+                    game,
+                    100 * i + 300,
+                    200,
+                    'battlecruiser',
+                    0));
+            }
 
             // TODO: create a `PlayerCharacters` class and implement this there.
             playerCharacters.notifyActiveChildrenOfArrival = function () {
                 playerCharacters.forEach(function (child) {
-                    if (child.isSelected) {
-                        child.arriveToDestination(false);
-                    }
+                    child.arriveToDestination(false);
                 }, this);
             };
-            game.camera.focusOn(playerCharacters.getAt(1));
+            game.camera.focusOn(playerCharacters.getAt(0));
 
             // Create some power ups
             powerUps = Utils.spawnPowerUps(game, powerUps, config);

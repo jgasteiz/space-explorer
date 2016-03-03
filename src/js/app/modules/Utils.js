@@ -105,6 +105,27 @@ define(['Phaser'], function (Phaser) {
             return aliens;
         },
 
+        /**
+         * Spawn a single Alien that won't move in a given position.
+         * This method is mainly for debugging purposes.
+         * @param game - Phaser.Game instance
+         * @param group - Phaser.Group instance
+         * @param x
+         * @param y
+         */
+        spawnSingleStaticAlien: function (game, group, x, y) {
+            var aliens = game.add.group();
+            aliens.enableBody = true;
+            var alien = new Phaser.Alien(
+                game,
+                x,
+                y,
+                'alien'
+            );
+            aliens.add(alien);
+            return aliens;
+        },
+
         spawnPowerUps: function (game, group, config) {
             var powerUps = game.add.group();
             powerUps.enableBody = true;

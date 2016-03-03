@@ -23,5 +23,10 @@ define([
     Alien.prototype = Object.create(Phaser.Character.prototype);
     Alien.prototype.constructor = Alien;
 
+    // TODO: add some proper sprites with angles for the Alien so we don't have to do this.
+    Alien.prototype.setFrameForRotation = function (rotation) {
+        this.rotation = rotation;
+    };
+
     Phaser.Alien = Alien;
 });

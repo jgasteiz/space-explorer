@@ -26,24 +26,22 @@ define([
         this.bulletsGroup.enableBody = true;
         this.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
-        // Setup animations
-        this.animations.add('move', [1,2,3]);
-        this.animations.add('standby', [0]);
-
         // Setup the fire key.
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
 
-        // Move to the clicked position if the spaceship is alive and selected.
-        this.game.input.activePointer.rightButton.onDown.add(function (evt) {
-            if (!this.isAlive()) {
-                // TODO: Game over
-                return;
-            }
-            if (!this.isSelected) {
-                return;
-            }
-            this.moveToXY(evt.parent.worldX, evt.parent.worldY);
-        }, this);
+        // Setup animations
+        this.animations.add('up', [0]);
+        this.animations.add('right', [1]);
+        this.animations.add('down', [2]);
+        this.animations.add('left', [3]);
+        this.animations.add('upright', [4]);
+        this.animations.add('rightdown', [5]);
+        this.animations.add('downleft', [6]);
+        this.animations.add('leftup', [7]);
+
+        // Set initial animation and rotation
+        this.animations.play('rightdown', 0, true);
+        this._rotation = 3 * Math.PI / 4;
     };
 
     Spaceship.prototype = Object.create(Phaser.Character.prototype);
@@ -54,7 +52,7 @@ define([
      * @param x
      * @param y
      */
-    Spaceship.prototype.fireOnXY = function (x, y) {
+    Spaceship.prototype.attack = function (x, y) {
         var lastBullet = this.bullets[this.bullets.length - 1];
         var lastDate = lastBullet ? lastBullet.date + this.fireDelay : 0;
 
@@ -94,7 +92,7 @@ define([
             if (!this.isSelected) {
                 return;
             }
-            this.fireOnXY(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
+            this.attack(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
         }
     };
 
