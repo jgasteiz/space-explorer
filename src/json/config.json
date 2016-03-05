@@ -5,9 +5,7 @@
     "width": 980,
     "height": 720,
     "worldHeight": 2048,
-    "worldWidth": 2048,
-    "numAliens": 16,
-    "numSpacehips": 4
+    "worldWidth": 2048
   },
   "characterConfig": {
     "characterName": "Character",
@@ -43,13 +41,32 @@
   },
   "spaceshipConfig": {
     "characterName": "Spaceship",
+    "fireSpeed": 600,
     "isSelectable": true,
     "isEnemy": false,
     "speed": 300,
-    "strength": 1.2
+    "strength": 3
+  },
+  "spacemarineConfig": {
+    "characterName": "Marine",
+    "fireDelay": 100,
+    "fireSpeed": 1000,
+    "isSelectable": true,
+    "isEnemy": false,
+    "speed": 100,
+    "strength": 0.4
   },
   "powerUpConfig": {
     "health": 20,
     "radioactive": -25
+  },
+  "stageConfig": {
+    "stageOne": {
+      "numSpaceships": 2,
+      "numEnemies": 20
+    },
+    "stageTwo": {
+      "numEnemies": 8
+    }
   }
 }
