@@ -96,7 +96,7 @@ define([
      */
     Character.prototype.initializeHealthBar = function () {
         this.healthBar = this.game.add.text(0, 0, this.getHealth(),
-            {font: '18px Arial', align: 'center', fill: 'rgba(0, 255, 0, 0.2)'});
+            {font: '18px \'Share Tech Mono\'', align: 'center', fill: 'rgba(0, 255, 0, 0.2)'});
         this.healthBar.anchor.set(0.5);
     };
 
