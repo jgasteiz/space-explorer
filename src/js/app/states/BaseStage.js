@@ -80,19 +80,26 @@ define([
             }
         },
         render: function () {
-            this.game.debug.text('FPS: ' + this.game.time.fps || '--', 12, 20, "#00ff00");
+            this.game.debug.text('FPS: ' + this.game.time.fps || '--', 12, 20, '#00ff00');
             this.game.debug.text('Selected units: ' + Utils.getSelectedUnitsSummary(this.game.selectedUnits), 12, 40, "#00ff00");
             // Render status of all selected units.
-            var healthPosition = 60;
+            var newLineYPosition = 60;
             this.game.playerCharacters.forEach(function (spaceship) {
                 this.game.debug.text(
                     'Health: ' + spaceship.getHealth(),
                     12,
-                    healthPosition,
+                    newLineYPosition,
                     Utils.getColourForValue(spaceship.getHealth())
                 );
-                healthPosition += 20;
+                newLineYPosition += 20;
             }, this);
+
+            this.game.debug.text(
+                'Enemies: ' + this.aliens.countLiving() + ' / ' + this.aliens.length,
+                12,
+                newLineYPosition,
+                '#00ff00'
+            );
         }
     };
 

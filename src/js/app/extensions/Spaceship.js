@@ -10,11 +10,10 @@ define([
      * @param game
      * @param x
      * @param y
-     * @param sprite
      * @constructor
      */
-    var Spaceship = function (game, x, y, sprite) {
-        Phaser.Character.call(this, game, x, y, sprite);
+    var Spaceship = function (game, x, y) {
+        Phaser.Character.call(this, game, x, y, 'battlecruiser');
         Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['spaceshipConfig']);
 
         this.anchor.setTo(0.5, 0.4);

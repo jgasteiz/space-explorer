@@ -10,11 +10,10 @@ define([
      * @param game
      * @param x
      * @param y
-     * @param sprite
      * @constructor
      */
-    var Alien = function (game, x, y, sprite) {
-        Phaser.Character.call(this, game, x, y, sprite);
+    var Alien = function (game, x, y) {
+        Phaser.Character.call(this, game, x, y, 'alien');
         Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['alienConfig']);
     };
 

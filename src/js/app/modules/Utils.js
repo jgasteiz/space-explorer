@@ -82,7 +82,7 @@ define(['Phaser'], function (Phaser) {
         /**
          * Spawn a number of aliens in the given game.
          * @param game - Phaser.Game instance
-         * @param config
+         * @param config - {object}
          */
         spawnAliensInGame: function (game, config) {
             var aliens = game.add.group();
@@ -92,8 +92,7 @@ define(['Phaser'], function (Phaser) {
                 var alien = new Phaser.Alien(
                     game,
                     game.rnd.integerInRange(100, config.worldWidth - 100),
-                    game.rnd.integerInRange(100, config.worldHeight - 100),
-                    'alien'
+                    game.rnd.integerInRange(100, config.worldHeight - 100)
                 );
 
                 aliens.add(alien);
