@@ -82,10 +82,9 @@ define(['Phaser'], function (Phaser) {
         /**
          * Spawn a number of aliens in the given game.
          * @param game - Phaser.Game instance
-         * @param group - Phaser.Group instance
          * @param config
          */
-        spawnAliensInGame: function (game, group, config) {
+        spawnAliensInGame: function (game, config) {
             var aliens = game.add.group();
             aliens.enableBody = true;
             // Spawn `numAliens` number of aliens.
@@ -126,7 +125,13 @@ define(['Phaser'], function (Phaser) {
             return aliens;
         },
 
-        spawnPowerUps: function (game, group, config) {
+        /**
+         * Spawn powerups randomly.
+         * @param game
+         * @param config
+         * @returns {*}
+         */
+        spawnPowerUps: function (game, config) {
             var powerUps = game.add.group();
             powerUps.enableBody = true;
             for (var i = 0; i < 5; i++) {
@@ -140,6 +145,7 @@ define(['Phaser'], function (Phaser) {
             }
             return powerUps;
         },
+
         Print: {
             log: function (message) {
                 window.console.log(message);

@@ -1,5 +1,6 @@
 define([
     'Phaser',
+    'states/BaseStage',
     'extensions/PowerUp',
     'extensions/Spaceship',
     'extensions/Alien'
