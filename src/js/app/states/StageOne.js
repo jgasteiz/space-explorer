@@ -37,11 +37,11 @@ define([
             game.selectedUnits = [];
 
             // Create spaceships
-            playerCharacters = game.add.physicsGroup();
+            this.game.playerCharacters = game.add.physicsGroup();
 
             // Spawn as many spaceships as it's specified in the config.
             for (var i = 0; i < config.numSpacehips; i++) {
-                playerCharacters.add(new Phaser.Spaceship(
+                this.game.playerCharacters.add(new Phaser.Spaceship(
                     game,
                     100 * i + 300,
                     200,
@@ -50,12 +50,12 @@ define([
             }
 
             // TODO: create a `PlayerCharacters` class and implement this there.
-            playerCharacters.notifyActiveChildrenOfArrival = function () {
-                playerCharacters.forEach(function (child) {
+            this.game.playerCharacters.notifyActiveChildrenOfArrival = function () {
+                this.game.playerCharacters.forEach(function (child) {
                     child.arriveToDestination(false);
                 }, this);
             };
-            game.camera.focusOn(playerCharacters.getAt(0));
+            game.camera.focusOn(this.game.playerCharacters.getAt(0));
 
             // Create some power ups
             powerUps = Utils.spawnPowerUps(game, powerUps, config);
@@ -64,14 +64,14 @@ define([
             aliens = Utils.spawnAliensInGame(game, aliens, config);
 
             // Initialise the Selection module
-            selection = new Selection(game, playerCharacters);
+            selection = new Selection(game, this.game.playerCharacters);
             // Initialise the collisions module
-            collisions = new Collisions(game, aliens, playerCharacters, powerUps);
+            collisions = new Collisions(game, aliens, this.game.playerCharacters, powerUps);
             // Initialise the cursors
             cursors = game.input.keyboard.createCursorKeys();
         },
         update: function () {
-            playerCharacters.forEach(function (spaceship) {
+            this.game.playerCharacters.forEach(function (spaceship) {
                 spaceship.update();
             }, this);
             collisions.update();
@@ -104,7 +104,7 @@ define([
             game.debug.text('Selected units: ' + Utils.getSelectedUnitsSummary(game.selectedUnits), 12, 40, "#00ff00");
             // Render status of all selected units.
             var healthPosition = 60;
-            playerCharacters.forEach(function (spaceship) {
+            this.game.playerCharacters.forEach(function (spaceship) {
                 game.debug.text(
                     'Health: ' + spaceship.getHealth(),
                     12,

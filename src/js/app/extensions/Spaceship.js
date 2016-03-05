@@ -53,6 +53,10 @@ define([
      * @param y
      */
     Spaceship.prototype.attack = function (x, y) {
+        if (!this.isAlive()) {
+            return;
+        }
+
         var lastBullet = this.bullets[this.bullets.length - 1];
         var lastDate = lastBullet ? lastBullet.date + this.fireDelay : 0;
 
