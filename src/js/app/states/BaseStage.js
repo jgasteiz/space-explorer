@@ -39,7 +39,8 @@ define([
             this.powerUps = Utils.spawnPowerUps(this.game, this.game.gameConfig);
 
             // Create some aliens
-            this.aliens = Utils.spawnAliensInGame(this.game, this.game.gameConfig);
+            this.aliens = this.game.add.group();
+            Utils.spawnAliensInGame(this.game, this.aliens, this.game.gameConfig, this.stageConfig.numEnemies);
 
             // Initialise the Selection module
             this.selection = new Selection(this.game, this.game.playerCharacters);

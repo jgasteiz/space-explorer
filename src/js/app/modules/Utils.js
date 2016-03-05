@@ -82,13 +82,14 @@ define(['Phaser'], function (Phaser) {
         /**
          * Spawn a number of aliens in the given game.
          * @param game - Phaser.Game instance
+         * @param aliens - Phaser.Group instance
          * @param config - {object}
+         * @param numAliens - {Integer}
          */
-        spawnAliensInGame: function (game, config) {
-            var aliens = game.add.group();
+        spawnAliensInGame: function (game, aliens, config, numAliens) {
             aliens.enableBody = true;
             // Spawn `numAliens` number of aliens.
-            for (var i = 0; i < config.numAliens; i++) {
+            for (var i = 0; i < numAliens; i++) {
                 var alien = new Phaser.Alien(
                     game,
                     game.rnd.integerInRange(100, config.worldWidth - 100),
@@ -100,7 +101,6 @@ define(['Phaser'], function (Phaser) {
                 // Move the alien
                 alien.moveAroundWorld();
             }
-            return aliens;
         },
 
         /**
