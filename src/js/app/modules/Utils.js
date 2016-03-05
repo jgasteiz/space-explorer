@@ -82,19 +82,18 @@ define(['Phaser'], function (Phaser) {
         /**
          * Spawn a number of aliens in the given game.
          * @param game - Phaser.Game instance
-         * @param group - Phaser.Group instance
-         * @param config
+         * @param aliens - Phaser.Group instance
+         * @param config - {object}
+         * @param numAliens - {Integer}
          */
-        spawnAliensInGame: function (game, group, config) {
-            var aliens = game.add.group();
+        spawnAliensInGame: function (game, aliens, config, numAliens) {
             aliens.enableBody = true;
             // Spawn `numAliens` number of aliens.
-            for (var i = 0; i < config.numAliens; i++) {
+            for (var i = 0; i < numAliens; i++) {
                 var alien = new Phaser.Alien(
                     game,
                     game.rnd.integerInRange(100, config.worldWidth - 100),
-                    game.rnd.integerInRange(100, config.worldHeight - 100),
-                    'alien'
+                    game.rnd.integerInRange(100, config.worldHeight - 100)
                 );
 
                 aliens.add(alien);
@@ -102,7 +101,6 @@ define(['Phaser'], function (Phaser) {
                 // Move the alien
                 alien.moveAroundWorld();
             }
-            return aliens;
         },
 
         /**
@@ -126,7 +124,13 @@ define(['Phaser'], function (Phaser) {
             return aliens;
         },
 
-        spawnPowerUps: function (game, group, config) {
+        /**
+         * Spawn powerups randomly.
+         * @param game
+         * @param config
+         * @returns {*}
+         */
+        spawnPowerUps: function (game, config) {
             var powerUps = game.add.group();
             powerUps.enableBody = true;
             for (var i = 0; i < 5; i++) {
@@ -139,6 +143,21 @@ define(['Phaser'], function (Phaser) {
                 );
             }
             return powerUps;
+        },
+
+        Print: {
+            log: function (message) {
+                window.console.log(message);
+            },
+            info: function (message) {
+                window.console.info(message);
+            },
+            warn: function (message) {
+                window.console.warn(message);
+            },
+            error: function (message) {
+                window.console.error(message);
+            }
         }
     };
 });

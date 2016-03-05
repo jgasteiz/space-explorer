@@ -1,6 +1,6 @@
 define([
-    'modules/Config'
-], function (Config) {
+    'modules/Utils'
+], function (Utils) {
 
     function Collisions (game, aliens, playerCharacters, powerUps) {
         this.game = game;

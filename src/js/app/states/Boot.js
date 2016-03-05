@@ -16,12 +16,17 @@ define(['Phaser'], function (Phaser) {
 
             game.load.image('space', 'img/starcraft-map.png');
             game.load.image('bullet', 'img/bullet.png');
+            game.load.image('smallbullet', 'img/small-bullet.png');
             game.load.image('medkit', 'img/medkit.png');
             game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 50, 70, 4);
+            game.load.spritesheet('spacemarine', 'img/spacemarine.png', 26, 27, 8);
             game.load.spritesheet('battlecruiser', 'img/battlecruiser.png', 96, 76, 8);
             game.load.image('alien', 'img/invader.png');
             game.load.spritesheet('death', 'img/explode.png', 128, 128);
             game.load.spritesheet('impact', 'img/impact.png', 32, 32);
+
+            game.load.json('config', 'json/config.json');
+
             game.time.advancedTiming = true;
 
             var loadingMessages = [
@@ -73,6 +78,7 @@ define(['Phaser'], function (Phaser) {
 
                 // Start stage one
                 game.state.start('StageOne');
+                //game.state.start('StageTwo');
             }
         }
     };

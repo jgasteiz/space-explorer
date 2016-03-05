@@ -5,16 +5,16 @@ define([
 ], function (Phaser, Utils) {
 
     /**
-     * Spaceship constructor method.
+     * Marine constructor method.
      * Initialise the sprite, the bullets and add the sprite to the game.
      * @param game
      * @param x
      * @param y
      * @constructor
      */
-    var Spaceship = function (game, x, y) {
-        Phaser.Character.call(this, game, x, y, 'battlecruiser');
-        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['spaceshipConfig']);
+    var Marine = function (game, x, y) {
+        Phaser.Character.call(this, game, x, y, 'spacemarine');
+        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['spacemarineConfig']);
 
         this.anchor.setTo(0.5, 0.4);
 
@@ -42,15 +42,15 @@ define([
         this._rotation = 3 * Math.PI / 4;
     };
 
-    Spaceship.prototype = Object.create(Phaser.Character.prototype);
-    Spaceship.prototype.constructor = Spaceship;
+    Marine.prototype = Object.create(Phaser.Character.prototype);
+    Marine.prototype.constructor = Marine;
 
     /**
      * Fire a bullet towards the given pointer.
      * @param x
      * @param y
      */
-    Spaceship.prototype.attack = function (x, y) {
+    Marine.prototype.attack = function (x, y) {
         if (!this.isAlive()) {
             return;
         }
@@ -61,7 +61,7 @@ define([
         if (lastDate < new Date().getTime()) {
             // The bullet should spawn in the front of the spaceship..
             var headPosition = this.getHeadPosition(),
-                bullet = this.bulletsGroup.create(headPosition.x, headPosition.y, 'bullet');
+                bullet = this.bulletsGroup.create(headPosition.x, headPosition.y, 'smallbullet');
 
             bullet.anchor.x = 0.5;
             bullet.anchor.y = 1;
@@ -79,9 +79,9 @@ define([
     };
 
     /**
-     * Spaceship's update method.
+     * Marine's update method.
      */
-    Spaceship.prototype.update = function () {
+    Marine.prototype.update = function () {
         Phaser.Character.prototype.update.call(this);
 
         if (!this.isAlive()) {
@@ -96,7 +96,9 @@ define([
             }
             this.attack(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
         }
+
+        this.healthBar.y = Math.floor(this.y - this.height);
     };
 
-    Phaser.Spaceship = Spaceship;
+    Phaser.Marine = Marine;
 });

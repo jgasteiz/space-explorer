@@ -1,12 +1,12 @@
 define([
     'Phaser',
-    'modules/Config',
+    'states/BaseStage',
     'extensions/PowerUp',
     'extensions/Spaceship',
+    'extensions/Marine',
     'extensions/Alien'
-], function (Phaser, Config) {
+], function (Phaser) {
     return function () {
-        var config = Config.getConfig();
-        return new Phaser.Game(config.width, config.height, Phaser.AUTO, config.containerId);
+        return new Phaser.Game(980, 720, Phaser.AUTO, 'container');
     };
 });

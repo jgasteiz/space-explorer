@@ -1,118 +1,39 @@
 define([
     'Phaser',
-    'modules/Config',
-    'modules/Print',
     'modules/Utils',
-    'modules/Collisions',
-    'modules/Selection'
-], function (Phaser, Config, Print, Utils, Collisions, Selection) {
-
-    var game,
-        config,
-        collisions,
-        selection,
-        playerCharacters,
-        powerUps,
-        aliens;
+    'states/BaseStage'
+], function (Phaser, Utils) {
 
     var StageOne = function (_game) {
-        game = _game;
-        config = Config.getConfig();
+        Phaser.BaseStage.call(this, _game);
     };
+
+    StageOne.prototype = Object.create(Phaser.BaseStage.prototype);
 
     StageOne.prototype = {
         constructor: StageOne,
         preload: function () {
-            game.scale.setGameSize(window.innerWidth, window.innerHeight);
-            game.scale.setResizeCallback(function () {
-                game.scale.setGameSize(window.innerWidth, window.innerHeight);
-            }, game);
+            Phaser.BaseStage.prototype.preload.call(this);
+            this.stageConfig = this.game.cache.getJSON('config')['stageConfig']['stageOne'];
         },
         create: function () {
-            // Create game
-            game.world.setBounds(0, 0, config.worldHeight, config.worldWidth);
-            game.physics.startSystem(Phaser.Physics.ARCADE);
-            game.starfield = game.add.sprite(0, 0, 'space');
-            game.starfield.inputEnabled = true;
-            game.selectedUnits = [];
-
-            // Create spaceships
-            this.game.playerCharacters = game.add.physicsGroup();
+            Phaser.BaseStage.prototype.create.call(this);
 
             // Spawn as many spaceships as it's specified in the config.
-            for (var i = 0; i < config.numSpacehips; i++) {
-                this.game.playerCharacters.add(new Phaser.Spaceship(
-                    game,
-                    100 * i + 300,
-                    200,
-                    'battlecruiser',
-                    0));
+            for (var i = 0; i < this.stageConfig.numSpaceships; i++) {
+                this.game.playerCharacters.add(new Phaser.Spaceship(this.game, 100 * i + 300, 200));
             }
-
-            // TODO: create a `PlayerCharacters` class and implement this there.
-            this.game.playerCharacters.notifyActiveChildrenOfArrival = function () {
-                this.game.playerCharacters.forEach(function (child) {
-                    child.arriveToDestination(false);
-                }, this);
-            };
-            game.camera.focusOn(this.game.playerCharacters.getAt(0));
-
-            // Create some power ups
-            powerUps = Utils.spawnPowerUps(game, powerUps, config);
-
-            // Create some aliens
-            aliens = Utils.spawnAliensInGame(game, aliens, config);
-
-            // Initialise the Selection module
-            selection = new Selection(game, this.game.playerCharacters);
-            // Initialise the collisions module
-            collisions = new Collisions(game, aliens, this.game.playerCharacters, powerUps);
-            // Initialise the cursors
-            cursors = game.input.keyboard.createCursorKeys();
+            this.game.camera.focusOn(this.game.playerCharacters.getAt(0));
         },
         update: function () {
-            this.game.playerCharacters.forEach(function (spaceship) {
-                spaceship.update();
-            }, this);
-            collisions.update();
+            Phaser.BaseStage.prototype.update.call(this);
 
-            // Move the camera
-            if (cursors.up.isDown) {
-                game.camera.y -= 12;
-            } else if (cursors.down.isDown) {
-                game.camera.y += 12;
-            }
-            if (cursors.left.isDown) {
-                game.camera.x -= 12;
-            } else if (cursors.right.isDown) {
-                game.camera.x += 12;
-            }
-
-            if (game.input.activePointer.position.x > game.width - 70) {
-                game.camera.x = game.camera.x + 12;
-            } else if (game.input.activePointer.position.x < 70) {
-                game.camera.x = game.camera.x - 12;
-            }
-            if (game.input.activePointer.position.y > game.height - 70) {
-                game.camera.y = game.camera.y + 12;
-            } else if (game.input.activePointer.position.y < 70) {
-                game.camera.y = game.camera.y - 12;
+            if (!this.aliens.getFirstAlive()) {
+                this.game.state.start('StageTwo');
             }
         },
         render: function () {
-            game.debug.text('FPS: ' + game.time.fps || '--', 12, 20, "#00ff00");
-            game.debug.text('Selected units: ' + Utils.getSelectedUnitsSummary(game.selectedUnits), 12, 40, "#00ff00");
-            // Render status of all selected units.
-            var healthPosition = 60;
-            this.game.playerCharacters.forEach(function (spaceship) {
-                game.debug.text(
-                    'Health: ' + spaceship.getHealth(),
-                    12,
-                    healthPosition,
-                    Utils.getColourForValue(spaceship.getHealth())
-                );
-                healthPosition += 20;
-            }, this);
+            Phaser.BaseStage.prototype.render.call(this);
         }
     };
 
