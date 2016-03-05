@@ -1,9 +1,7 @@
 define([
     'Phaser',
-    'modules/Config',
-    'modules/Print',
     'modules/Utils'
-], function (Phaser, Config, Print, Utils) {
+], function (Phaser, Utils) {
 
     /**
      * PowerUp constructor method.
@@ -24,7 +22,7 @@ define([
 
         // PowerUp properties
         this.powerUpType = powerUpType;
-        this.powerUpValue = Config.getPowerUpValue(this.powerUpType);
+        this.powerUpValue = game.cache.getJSON('config')['powerUpConfig'][this.powerUpType];
 
         // Add to the game
         game.add.existing(this);

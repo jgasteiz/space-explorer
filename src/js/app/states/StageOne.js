@@ -1,23 +1,19 @@
 define([
     'Phaser',
-    'modules/Config',
-    'modules/Print',
     'modules/Utils',
     'modules/Collisions',
     'modules/Selection'
-], function (Phaser, Config, Print, Utils, Collisions, Selection) {
+], function (Phaser, Utils, Collisions, Selection) {
 
     var game,
-        config,
+        gameConfig,
         collisions,
         selection,
-        playerCharacters,
         powerUps,
         aliens;
 
     var StageOne = function (_game) {
         game = _game;
-        config = Config.getConfig();
     };
 
     StageOne.prototype = {
@@ -29,8 +25,11 @@ define([
             }, game);
         },
         create: function () {
+
+            game.gameConfig = game.cache.getJSON('config')['gameConfig'];
+
             // Create game
-            game.world.setBounds(0, 0, config.worldHeight, config.worldWidth);
+            game.world.setBounds(0, 0, game.gameConfig.worldHeight, game.gameConfig.worldWidth);
             game.physics.startSystem(Phaser.Physics.ARCADE);
             game.starfield = game.add.sprite(0, 0, 'space');
             game.starfield.inputEnabled = true;
@@ -40,7 +39,7 @@ define([
             this.game.playerCharacters = game.add.physicsGroup();
 
             // Spawn as many spaceships as it's specified in the config.
-            for (var i = 0; i < config.numSpacehips; i++) {
+            for (var i = 0; i < game.gameConfig.numSpacehips; i++) {
                 this.game.playerCharacters.add(new Phaser.Spaceship(
                     game,
                     100 * i + 300,
@@ -58,10 +57,10 @@ define([
             game.camera.focusOn(this.game.playerCharacters.getAt(0));
 
             // Create some power ups
-            powerUps = Utils.spawnPowerUps(game, powerUps, config);
+            powerUps = Utils.spawnPowerUps(game, powerUps, game.gameConfig);
 
             // Create some aliens
-            aliens = Utils.spawnAliensInGame(game, aliens, config);
+            aliens = Utils.spawnAliensInGame(game, aliens, game.gameConfig);
 
             // Initialise the Selection module
             selection = new Selection(game, this.game.playerCharacters);

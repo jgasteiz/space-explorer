@@ -139,6 +139,20 @@ define(['Phaser'], function (Phaser) {
                 );
             }
             return powerUps;
+        },
+        Print: {
+            log: function (message) {
+                window.console.log(message);
+            },
+            info: function (message) {
+                window.console.info(message);
+            },
+            warn: function (message) {
+                window.console.warn(message);
+            },
+            error: function (message) {
+                window.console.error(message);
+            }
         }
     };
 });

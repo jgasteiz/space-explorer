@@ -26,7 +26,6 @@ define(['Phaser'], function (Phaser) {
 
         game.input.addMoveCallback(function (pointer) {
             if (isSelecting) {
-                // console.log(pointer.worldX + ', ' + pointer.worldY);
                 rectangle.width = pointer.worldX - rectangle.position.x;
                 rectangle.height = pointer.worldY - rectangle.position.y;
             }

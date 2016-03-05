@@ -1,9 +1,8 @@
 requirejs([
-    'modules/Config',
     'PhaserGame',
     'states/Boot',
     'states/StageOne'
-], function (Config, PhaserGame, Boot, StageOne) {
+], function (PhaserGame, Boot, StageOne) {
     var game = new PhaserGame();
     game.state.add('Boot', Boot);
     game.state.add('StageOne', StageOne);

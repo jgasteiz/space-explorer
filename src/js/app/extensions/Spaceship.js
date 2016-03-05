@@ -1,9 +1,8 @@
 define([
     'Phaser',
-    'modules/Config',
-    'modules/Print',
+    'modules/Utils',
     'extensions/Character'
-], function (Phaser, Config, Print) {
+], function (Phaser, Utils) {
 
     /**
      * Spaceship constructor method.
@@ -16,7 +15,7 @@ define([
      */
     var Spaceship = function (game, x, y, sprite) {
         Phaser.Character.call(this, game, x, y, sprite);
-        Phaser.Character.prototype.initializeConfig.call(this, Config.getSpaceshipConfig());
+        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['spaceshipConfig']);
 
         this.anchor.setTo(0.5, 0.4);
 

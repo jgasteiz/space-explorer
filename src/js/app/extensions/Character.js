@@ -1,11 +1,7 @@
 define([
     'Phaser',
-    'modules/Config',
-    'modules/Print',
     'modules/Utils'
-], function (Phaser, Config, Print, Utils) {
-
-    var config = Config.getConfig();
+], function (Phaser, Utils) {
 
     /**
      * Character constructor method.
@@ -18,7 +14,7 @@ define([
      */
     var Character = function (game, x, y, sprite) {
         Phaser.Sprite.call(this, game, x, y, sprite);
-        this.initializeConfig(Config.getCharacterConfig());
+        this.initializeConfig(game.cache.getJSON('config')['characterConfig']);
 
         // Physics and position
         this.anchor.setTo(0.5);
@@ -67,7 +63,7 @@ define([
             } else if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
                 // If the character is an enemy and there are any selected
                 // units, set clicked character as active target.
-                if (this.enemy && this.game.selectedUnits.length > 0) {
+                if (this.isEnemy && this.game.selectedUnits.length > 0) {
                     this.game.selectedUnits.forEach(function (character) {
                         character.setActiveTarget(this);
                     }, this);
@@ -236,8 +232,8 @@ define([
 
         // Move to some random place.
         this.moveToXY(
-            this.game.rnd.integerInRange(100, config.worldWidth - 100),
-            this.game.rnd.integerInRange(100, config.worldHeight - 100)
+            this.game.rnd.integerInRange(100, this.game.gameConfig.worldWidth - 100),
+            this.game.rnd.integerInRange(100, this.game.gameConfig.worldHeight - 100)
         );
     };
 

@@ -22,6 +22,9 @@ define(['Phaser'], function (Phaser) {
             game.load.image('alien', 'img/invader.png');
             game.load.spritesheet('death', 'img/explode.png', 128, 128);
             game.load.spritesheet('impact', 'img/impact.png', 32, 32);
+
+            game.load.json('config', 'json/config.json');
+
             game.time.advancedTiming = true;
 
             var loadingMessages = [

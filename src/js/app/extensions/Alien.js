@@ -1,10 +1,8 @@
 define([
     'Phaser',
-    'modules/Config',
-    'modules/Print',
     'modules/Utils',
     'extensions/Character'
-], function (Phaser, Config, Print, Utils) {
+], function (Phaser, Utils) {
 
     /**
      * Alien constructor method.
@@ -17,7 +15,7 @@ define([
      */
     var Alien = function (game, x, y, sprite) {
         Phaser.Character.call(this, game, x, y, sprite);
-        Phaser.Character.prototype.initializeConfig.call(this, Config.getAlienConfig());
+        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['alienConfig']);
     };
 
     Alien.prototype = Object.create(Phaser.Character.prototype);
