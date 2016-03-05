@@ -16,6 +16,7 @@ define(['Phaser'], function (Phaser) {
 
             game.load.image('space', 'img/starcraft-map.png');
             game.load.image('bullet', 'img/bullet.png');
+            game.load.image('smallbullet', 'img/small-bullet.png');
             game.load.image('medkit', 'img/medkit.png');
             game.load.spritesheet('spaceship', 'img/spaceship_animation.png', 50, 70, 4);
             game.load.spritesheet('spacemarine', 'img/spacemarine.png', 26, 27, 8);
@@ -77,6 +78,7 @@ define(['Phaser'], function (Phaser) {
 
                 // Start stage one
                 game.state.start('StageOne');
+                //game.state.start('StageTwo');
             }
         }
     };

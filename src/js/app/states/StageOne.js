@@ -1,7 +1,8 @@
 define([
     'Phaser',
+    'modules/Utils',
     'states/BaseStage'
-], function (Phaser) {
+], function (Phaser, Utils) {
 
     var StageOne = function (_game) {
         Phaser.BaseStage.call(this, _game);
@@ -13,12 +14,13 @@ define([
         constructor: StageOne,
         preload: function () {
             Phaser.BaseStage.prototype.preload.call(this);
+            this.stageConfig = this.game.cache.getJSON('config')['stageConfig']['stageOne'];
         },
         create: function () {
             Phaser.BaseStage.prototype.create.call(this);
 
             // Spawn as many spaceships as it's specified in the config.
-            for (var i = 0; i < this.game.gameConfig.numSpacehips; i++) {
+            for (var i = 0; i < this.stageConfig.numSpaceships; i++) {
                 this.game.playerCharacters.add(new Phaser.Spaceship(this.game, 100 * i + 300, 200));
             }
             this.game.camera.focusOn(this.game.playerCharacters.getAt(0));

@@ -3,6 +3,7 @@ define([
     'states/BaseStage',
     'extensions/PowerUp',
     'extensions/Spaceship',
+    'extensions/Marine',
     'extensions/Alien'
 ], function (Phaser) {
     return function () {
