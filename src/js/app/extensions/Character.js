@@ -79,10 +79,6 @@ define([
         // If the scenario is clicked, go to the clicked position.
         this.game.starfield.events.onInputDown.add(function (sprite, pointer) {
             if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
-                if (!this.isAlive()) {
-                    // TODO: Game over
-                    return;
-                }
                 if (!this.isSelected) {
                     return;
                 }
@@ -249,7 +245,7 @@ define([
      * Function called when the movement animation is completed.
      */
     Character.prototype.onCompleteMovement = function () {
-        Print.log('on complete movement');
+        // To be implemented
     };
 
     /**
@@ -283,6 +279,7 @@ define([
             return;
         }
 
+        this.game.playerCharacters.remove(this);
         this.healthBar.kill();
         this.kill();
 
@@ -375,7 +372,10 @@ define([
      * @param y
      */
     Character.prototype.attack = function (x, y) {
-        Print.log('To be implemented');
+        if (!this.isAlive()) {
+            return;
+        }
+        // To be implemented
     };
 
     /**
