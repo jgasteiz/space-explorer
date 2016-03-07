@@ -24,6 +24,9 @@ define([
         this.body.collideWorldBounds = true;
         this.body.mass = -100;
 
+        // Tween for the movement.
+        this.movementTween = null;
+
         // Healthbar
         this.initializeHealthBar();
 
@@ -186,11 +189,31 @@ define([
             return;
         }
 
-        // Set the frame for the direction where the character is moving.
-        this.setFrameForRotation(this.game.physics.arcade.moveToXY(this, x, y, this.speed) + (window.Math.PI / 2));
+        // Depending on the index of the character in the playerCharactersGroup,
+        // update the position where the character should move.
+        var characterIndex = this.game.selectedUnits.indexOf(this);
+        if (characterIndex > -1) {
+            x = x + this.width / 2 * characterIndex;
+            y = y + this.height / 2 * characterIndex;
+        }
 
-        // Set the desired destination.
-        this.desiredDestination = {x: x, y: y};
+        // Set the frame for the direction where the character is moving.
+        var newAngle = window.Math.atan2(y - this.position.y, x - this.position.x) + (window.Math.PI / 2);
+        this.setFrameForRotation(newAngle);
+
+        // Get the duration of the movement
+        var duration = (this.game.physics.arcade.distanceToXY(this, x, y) / this.speed) * 1000;
+        // Initialise movement tween
+        this.movementTween = this.game.add.tween(this).to({
+            x: x,
+            y: y
+        }, Math.max(duration, 1000), Phaser.Easing.Sinusoidal.InOut, true);
+
+        this.movementTween.onComplete.add(function(){
+            this.onCompleteMovement();
+        }, this);
+
+        this.movementTween.start();
     };
 
     /**
@@ -299,37 +322,9 @@ define([
     };
 
     /**
-     * Set body velocity to 0 and tell the parent group to notify the rest of the
-     * selected characters (within the same group) about the arrival.
-     * @param notifySiblings
-     */
-    Character.prototype.arriveToDestination = function (notifySiblings) {
-        this.desiredDestination = null;
-        this.body.velocity.x = 0;
-        this.body.velocity.y = 0;
-        this.onCompleteMovement();
-
-        if (notifySiblings && this.parent.hasOwnProperty('notifyActiveChildrenOfArrival')) {
-            this.parent.notifyActiveChildrenOfArrival();
-        }
-    };
-
-    /**
      * Character's update method.
      */
     Character.prototype.update = function () {
-        // If there is a desired destination and the spaceship reaches it,
-        // change its velocity to 0.
-        if (this.desiredDestination) {
-            var distanceToDestination = this.position.distance(this.desiredDestination, true);
-            if (distanceToDestination < 50) {
-                this.arriveToDestination(true);
-            }
-        } else {
-            this.body.velocity.x = 0;
-            this.body.velocity.y = 0;
-        }
-
         // Update healthbar position
         this.healthBar.x = Math.floor(this.x);
         this.healthBar.y = Math.floor(this.y - this.height + 30);
