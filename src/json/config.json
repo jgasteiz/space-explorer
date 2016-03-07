@@ -36,7 +36,7 @@
     "characterName": "Alien",
     "isSelectable": false,
     "isEnemy": true,
-    "speed": 60,
+    "speed": 100,
     "attackValue": 1
   },
   "spaceshipConfig": {
@@ -53,7 +53,7 @@
     "fireSpeed": 1000,
     "isSelectable": true,
     "isEnemy": false,
-    "speed": 100,
+    "speed": 160,
     "strength": 0.4
   },
   "powerUpConfig": {

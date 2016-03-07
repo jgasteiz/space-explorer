@@ -27,14 +27,6 @@ define([
             // Create playerCharacters group
             this.game.playerCharacters = this.game.add.physicsGroup();
 
-            // TODO: create a `PlayerCharacters` class and implement this there.
-            var _this = this;
-            this.game.playerCharacters.notifyActiveChildrenOfArrival = function () {
-                _this.game.playerCharacters.forEach(function (child) {
-                    child.arriveToDestination(false);
-                }, _this);
-            };
-
             // Create some power ups
             this.powerUps = Utils.spawnPowerUps(this.game, this.game.gameConfig);
 

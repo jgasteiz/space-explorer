@@ -28,7 +28,7 @@ define([
         update: function () {
             Phaser.BaseStage.prototype.update.call(this);
 
-            if (!this.aliens.getFirstAlive()) {
+            if (this.aliens.countLiving() === 0) {
                 this.game.state.start('StageTwo');
             }
         },
