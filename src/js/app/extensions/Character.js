@@ -189,6 +189,9 @@ define([
             return;
         }
 
+        // Lose active target.
+        this.activeTarget = null;
+
         // Depending on the index of the character in the playerCharactersGroup,
         // update the position where the character should move.
         var characterIndex = this.game.selectedUnits.indexOf(this);
