@@ -19,8 +19,10 @@ define([
         create: function () {
             Phaser.BaseStage.prototype.create.call(this);
 
-            // Spawn a Marine
-            this.game.playerCharacters.add(new Phaser.Marine(this.game, 100, 200));
+            // Spawn as many marines as it's specified in the config.
+            for (var i = 0; i < this.stageConfig.numMarines; i++) {
+                this.game.playerCharacters.add(new Phaser.Marine(this.game, 50 * i + 100, 200));
+            }
             this.game.camera.focusOn(this.game.playerCharacters.getAt(0));
         },
         update: function () {
