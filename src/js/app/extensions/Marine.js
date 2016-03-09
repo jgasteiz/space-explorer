@@ -28,17 +28,26 @@ define([
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
 
         // Setup animations
-        this.animations.add('up', [0]);
-        this.animations.add('right', [1]);
-        this.animations.add('down', [2]);
-        this.animations.add('left', [3]);
-        this.animations.add('upright', [4]);
-        this.animations.add('rightdown', [5]);
-        this.animations.add('downleft', [6]);
-        this.animations.add('leftup', [7]);
+        this.animations.add('up-standby', [0]);
+        this.animations.add('up', [8, 9]);
+        this.animations.add('right-standby', [1]);
+        this.animations.add('right', [10, 11]);
+        this.animations.add('down-standby', [2]);
+        this.animations.add('down', [12, 13]);
+        this.animations.add('left-standby', [3]);
+        this.animations.add('left', [14, 15]);
+        this.animations.add('upright-standby', [4]);
+        this.animations.add('upright', [16, 17]);
+        this.animations.add('rightdown-standby', [5]);
+        this.animations.add('rightdown', [18, 19]);
+        this.animations.add('downleft-standby', [6]);
+        this.animations.add('downleft', [20, 21]);
+        this.animations.add('leftup-standby', [7]);
+        this.animations.add('leftup', [22, 23]);
 
         // Set initial animation and rotation
-        this.animations.play('rightdown', 0, true);
+        this.direction = 'rightdown-standby';
+        this.animations.play(this.direction, 0, true);
         this._rotation = 3 * Math.PI / 4;
     };
 
@@ -98,6 +107,16 @@ define([
         }
 
         this.healthBar.y = Math.floor(this.y - this.height);
+    };
+
+    Marine.prototype.playAnimationAndSetDirection = function (direction) {
+        // Set the animation frame.
+        this.animations.play(direction, 5, true);
+        this.direction = direction;
+    };
+
+    Marine.prototype.onCompleteMovement = function () {
+        this.animations.play(this.direction + '-standby', 0, true);
     };
 
     Phaser.Marine = Marine;

@@ -212,7 +212,7 @@ define([
             y: y
         }, Math.max(duration, 1000), Phaser.Easing.Sinusoidal.InOut, true);
 
-        this.movementTween.onComplete.add(function(){
+        this.movementTween.onComplete.add(function() {
             this.onCompleteMovement();
         }, this);
 
@@ -245,7 +245,14 @@ define([
             direction = this.animationFrames[0];
         }
 
-        // Set the animation frame.
+        this.playAnimationAndSetDirection(direction);
+    };
+
+    /**
+     * Play an animation for the given direction.
+     * @param direction
+     */
+    Character.prototype.playAnimationAndSetDirection = function (direction) {
         this.animations.play(direction, 0, true);
     };
 
