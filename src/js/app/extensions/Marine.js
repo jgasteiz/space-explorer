@@ -109,9 +109,13 @@ define([
         this.healthBar.y = Math.floor(this.y - this.height);
     };
 
-    Marine.prototype.playAnimationAndSetDirection = function (direction) {
+    Marine.prototype.playAnimationAndSetDirection = function (direction, withAnimation) {
         // Set the animation frame.
-        this.animations.play(direction, 5, true);
+        if (withAnimation) {
+            this.animations.play(direction, 5, true);
+        } else {
+            this.animations.play(direction + '-standby', 0, true);
+        }
         this.direction = direction;
     };
 

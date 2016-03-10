@@ -192,6 +192,9 @@ define([
             return;
         }
 
+        // Stop the character movement.
+        this.stopMoving();
+
         // Lose active target.
         this.activeTarget = null;
 
@@ -205,7 +208,7 @@ define([
 
         // Set the frame for the direction where the character is moving.
         var newAngle = window.Math.atan2(y - this.position.y, x - this.position.x) + (window.Math.PI / 2);
-        this.setFrameForRotation(newAngle);
+        this.setFrameForRotation(newAngle, true);
 
         // Get the duration of the movement
         var duration = (this.game.physics.arcade.distanceToXY(this, x, y) / this.speed) * 1000;
@@ -223,10 +226,21 @@ define([
     };
 
     /**
+     * Method to stop the movement tween, if it's active.
+     */
+    Character.prototype.stopMoving = function () {
+        // If there's an active tween, stop it.
+        if (this.movementTween) {
+            this.movementTween.stop();
+        }
+    };
+
+    /**
      * Set the right frame of the sprite depending on the given rotation.
      * @param rotation
+     * @param withAnimation
      */
-    Character.prototype.setFrameForRotation = function (rotation) {
+    Character.prototype.setFrameForRotation = function (rotation, withAnimation) {
 
         this._rotation = rotation;
 
@@ -248,7 +262,7 @@ define([
             direction = this.animationFrames[0];
         }
 
-        this.playAnimationAndSetDirection(direction);
+        this.playAnimationAndSetDirection(direction, withAnimation);
     };
 
     /**
@@ -365,6 +379,10 @@ define([
             if (!this.activeTarget.isAlive()) {
                 this.activeTarget = null;
             } else {
+                this.stopMoving();
+                var newAngle = window.Math.atan2(this.activeTarget.position.y - this.position.y, this.activeTarget.position.x - this.position.x) + (window.Math.PI / 2);
+                this.setFrameForRotation(newAngle, false);
+
                 this.attack(this.activeTarget.position.x, this.activeTarget.position.y);
             }
         }
