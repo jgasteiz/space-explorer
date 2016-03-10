@@ -24,6 +24,9 @@ define([
         this.bulletsGroup.enableBody = true;
         this.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
+        // Easing for start/end of the movement tween - slower at the beginning and end.
+        this.movementEasing = Phaser.Easing.Sinusoidal.InOut;
+
         // Setup the fire key.
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
 
@@ -51,9 +54,7 @@ define([
      * @param y
      */
     Spaceship.prototype.attack = function (x, y) {
-        if (!this.isAlive()) {
-            return;
-        }
+        Phaser.Character.prototype.attack.call(this, x, y);
 
         var lastBullet = this.bullets[this.bullets.length - 1];
         var lastDate = lastBullet ? lastBullet.date + this.fireDelay : 0;

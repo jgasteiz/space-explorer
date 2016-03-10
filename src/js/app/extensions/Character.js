@@ -27,6 +27,9 @@ define([
         // Tween for the movement.
         this.movementTween = null;
 
+        // Easing for start/end of the movement tween
+        this.movementEasing = null;
+
         // Healthbar
         this.initializeHealthBar();
 
@@ -189,6 +192,9 @@ define([
             return;
         }
 
+        // Stop the character movement.
+        this.stopMoving();
+
         // Lose active target.
         this.activeTarget = null;
 
@@ -202,7 +208,7 @@ define([
 
         // Set the frame for the direction where the character is moving.
         var newAngle = window.Math.atan2(y - this.position.y, x - this.position.x) + (window.Math.PI / 2);
-        this.setFrameForRotation(newAngle);
+        this.setFrameForRotation(newAngle, true);
 
         // Get the duration of the movement
         var duration = (this.game.physics.arcade.distanceToXY(this, x, y) / this.speed) * 1000;
@@ -210,7 +216,7 @@ define([
         this.movementTween = this.game.add.tween(this).to({
             x: x,
             y: y
-        }, Math.max(duration, 1000), Phaser.Easing.Sinusoidal.InOut, true);
+        }, Math.max(duration, 1000), this.movementEasing, true);
 
         this.movementTween.onComplete.add(function() {
             this.onCompleteMovement();
@@ -220,10 +226,21 @@ define([
     };
 
     /**
+     * Method to stop the movement tween, if it's active.
+     */
+    Character.prototype.stopMoving = function () {
+        // If there's an active tween, stop it.
+        if (this.movementTween) {
+            this.movementTween.stop();
+        }
+    };
+
+    /**
      * Set the right frame of the sprite depending on the given rotation.
      * @param rotation
+     * @param withAnimation
      */
-    Character.prototype.setFrameForRotation = function (rotation) {
+    Character.prototype.setFrameForRotation = function (rotation, withAnimation) {
 
         this._rotation = rotation;
 
@@ -245,7 +262,7 @@ define([
             direction = this.animationFrames[0];
         }
 
-        this.playAnimationAndSetDirection(direction);
+        this.playAnimationAndSetDirection(direction, withAnimation);
     };
 
     /**
@@ -362,6 +379,7 @@ define([
             if (!this.activeTarget.isAlive()) {
                 this.activeTarget = null;
             } else {
+                this.stopMoving();
                 this.attack(this.activeTarget.position.x, this.activeTarget.position.y);
             }
         }
@@ -376,6 +394,9 @@ define([
         if (!this.isAlive()) {
             return;
         }
+        // Look at the target before attacking
+        var newAngle = window.Math.atan2(y - this.position.y, x - this.position.x) + (window.Math.PI / 2);
+        this.setFrameForRotation(newAngle, false);
         // To be implemented
     };
 

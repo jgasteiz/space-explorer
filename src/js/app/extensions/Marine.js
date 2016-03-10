@@ -60,9 +60,7 @@ define([
      * @param y
      */
     Marine.prototype.attack = function (x, y) {
-        if (!this.isAlive()) {
-            return;
-        }
+        Phaser.Character.prototype.attack.call(this, x, y);
 
         var lastBullet = this.bullets[this.bullets.length - 1];
         var lastDate = lastBullet ? lastBullet.date + this.fireDelay : 0;
@@ -109,9 +107,13 @@ define([
         this.healthBar.y = Math.floor(this.y - this.height);
     };
 
-    Marine.prototype.playAnimationAndSetDirection = function (direction) {
+    Marine.prototype.playAnimationAndSetDirection = function (direction, withAnimation) {
         // Set the animation frame.
-        this.animations.play(direction, 5, true);
+        if (withAnimation) {
+            this.animations.play(direction, 5, true);
+        } else {
+            this.animations.play(direction + '-standby', 0, true);
+        }
         this.direction = direction;
     };
 
