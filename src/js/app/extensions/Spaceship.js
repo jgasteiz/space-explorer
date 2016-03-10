@@ -24,6 +24,9 @@ define([
         this.bulletsGroup.enableBody = true;
         this.bulletsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
+        // Easing for start/end of the movement tween - slower at the beginning and end.
+        this.movementEasing = Phaser.Easing.Sinusoidal.InOut;
+
         // Setup the fire key.
         this.firekey = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
 

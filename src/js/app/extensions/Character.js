@@ -27,6 +27,9 @@ define([
         // Tween for the movement.
         this.movementTween = null;
 
+        // Easing for start/end of the movement tween
+        this.movementEasing = null;
+
         // Healthbar
         this.initializeHealthBar();
 
@@ -210,7 +213,7 @@ define([
         this.movementTween = this.game.add.tween(this).to({
             x: x,
             y: y
-        }, Math.max(duration, 1000), Phaser.Easing.Sinusoidal.InOut, true);
+        }, Math.max(duration, 1000), this.movementEasing, true);
 
         this.movementTween.onComplete.add(function() {
             this.onCompleteMovement();
