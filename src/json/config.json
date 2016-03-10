@@ -63,7 +63,7 @@
   "stageConfig": {
     "stageOne": {
       "numSpaceships": 2,
-      "numEnemies": 0
+      "numEnemies": 10
     },
     "stageTwo": {
       "numMarines": 2,
