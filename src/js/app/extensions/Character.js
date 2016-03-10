@@ -380,9 +380,6 @@ define([
                 this.activeTarget = null;
             } else {
                 this.stopMoving();
-                var newAngle = window.Math.atan2(this.activeTarget.position.y - this.position.y, this.activeTarget.position.x - this.position.x) + (window.Math.PI / 2);
-                this.setFrameForRotation(newAngle, false);
-
                 this.attack(this.activeTarget.position.x, this.activeTarget.position.y);
             }
         }
@@ -397,6 +394,9 @@ define([
         if (!this.isAlive()) {
             return;
         }
+        // Look at the target before attacking
+        var newAngle = window.Math.atan2(y - this.position.y, x - this.position.x) + (window.Math.PI / 2);
+        this.setFrameForRotation(newAngle, false);
         // To be implemented
     };
 

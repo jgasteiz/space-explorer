@@ -60,9 +60,7 @@ define([
      * @param y
      */
     Marine.prototype.attack = function (x, y) {
-        if (!this.isAlive()) {
-            return;
-        }
+        Phaser.Character.prototype.attack.call(this, x, y);
 
         var lastBullet = this.bullets[this.bullets.length - 1];
         var lastDate = lastBullet ? lastBullet.date + this.fireDelay : 0;
