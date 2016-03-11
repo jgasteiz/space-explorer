@@ -15,6 +15,10 @@ define([
                 this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
             }, this);
             this.game.gameConfig = this.game.cache.getJSON('gameConfig');
+
+            this.stageConfig = this.game.cache.getJSON(this.stageName);
+
+            this.PlayerCharacterClass = Phaser[this.stageConfig.characterClass];
         },
         create: function () {
             // Create game
@@ -26,6 +30,10 @@ define([
 
             // Create playerCharacters group
             this.game.playerCharacters = this.game.add.physicsGroup();
+            for (var i = 0; i < this.stageConfig.numPlayerCharacters; i++) {
+                this.game.playerCharacters.add(new this.PlayerCharacterClass(this.game, 100 * i + 300, 200));
+            }
+            this.game.camera.focusOn(this.game.playerCharacters.getAt(0));
 
             // Create some power ups
             this.powerUps = Utils.spawnPowerUps(this.game, this.game.gameConfig);
@@ -42,6 +50,9 @@ define([
             this.cursors = this.game.input.keyboard.createCursorKeys();
         },
         update: function () {
+            if (!this.game.playerCharacters) {
+                return;
+            }
             this.game.playerCharacters.forEach(function (spaceship) {
                 spaceship.update();
             }, this);
