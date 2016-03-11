@@ -1,0 +1,13 @@
+{
+  "characterClass": "Spaceship",
+  "numPlayerCharacters": 2,
+  "numEnemies": 0,
+  "triggers": {
+    "victory": {
+      "numEnemies": 0
+    },
+    "defeat": {
+      "numPlayerCharacters": 0
+    }
+  }
+}

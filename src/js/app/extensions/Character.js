@@ -14,7 +14,7 @@ define([
      */
     var Character = function (game, x, y, sprite) {
         Phaser.Sprite.call(this, game, x, y, sprite);
-        this.initializeConfig(game.cache.getJSON('config')['characterConfig']);
+        this.initializeConfig(game.cache.getJSON('character'));
 
         // Physics and position
         this.anchor.setTo(0.5);

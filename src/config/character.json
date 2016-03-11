@@ -1,0 +1,25 @@
+{
+  "characterName": "Character",
+  "speed": 200,
+  "maxHealth": 100,
+  "health": 100,
+  "attackValue": 6,
+  "strength": 1,
+  "resistance": 1,
+  "fireDelay": 400,
+  "fireSpeed": 900,
+  "isEnemy": false,
+  "isSelectable": false,
+  "isSelected": false,
+  "activeTarget": null,
+  "animationFrames": [
+      "up",
+      "leftup",
+      "left",
+      "downleft",
+      "down",
+      "rightdown",
+      "right",
+      "upright"
+  ]
+}

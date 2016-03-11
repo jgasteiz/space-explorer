@@ -1,0 +1,13 @@
+{
+  "characterClass": "Marine",
+  "numPlayerCharacters": 2,
+  "numEnemies": 10,
+  "triggers": {
+    "victory": {
+      "numEnemies": 0
+    },
+    "defeat": {
+      "numPlayerCharacters": 0
+    }
+  }
+}

@@ -21,8 +21,9 @@ define([
         game.physics.arcade.enable(this);
 
         // PowerUp properties
+        this.powerUpsConfig = game.cache.getJSON('powerups');
         this.powerUpType = powerUpType;
-        this.powerUpValue = game.cache.getJSON('config')['powerUpConfig'][this.powerUpType];
+        this.powerUpValue = this.powerUpsConfig[this.powerUpType];
 
         // Add to the game
         game.add.existing(this);

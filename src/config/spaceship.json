@@ -1,0 +1,8 @@
+{
+  "characterName": "Spaceship",
+  "fireSpeed": 600,
+  "isSelectable": true,
+  "isEnemy": false,
+  "speed": 300,
+  "strength": 3
+}

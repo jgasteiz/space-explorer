@@ -14,7 +14,7 @@ define([
             this.game.scale.setResizeCallback(function () {
                 this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
             }, this);
-            this.game.gameConfig = this.game.cache.getJSON('config')['gameConfig'];
+            this.game.gameConfig = this.game.cache.getJSON('gameConfig');
         },
         create: function () {
             // Create game
