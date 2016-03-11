@@ -1,13 +1,15 @@
 {
   "characterClass": "Spaceship",
   "numPlayerCharacters": 2,
-  "numEnemies": 0,
+  "numEnemies": 10,
   "triggers": {
     "victory": {
-      "numEnemies": 0
+      "numEnemies": 0,
+      "nextStage": "StageTwo"
     },
     "defeat": {
-      "numPlayerCharacters": 0
+      "numPlayerCharacters": 0,
+      "nextStage": "Boot"
     }
   }
 }

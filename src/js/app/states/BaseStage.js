@@ -19,6 +19,10 @@ define([
             this.stageConfig = this.game.cache.getJSON(this.stageName);
 
             this.PlayerCharacterClass = Phaser[this.stageConfig.characterClass];
+
+            // Initialise victory and defeat triggers
+            this.victoryTriggers = this.stageConfig.triggers.victory;
+            this.defeatTriggers = this.stageConfig.triggers.defeat;
         },
         create: function () {
             // Create game
@@ -38,14 +42,14 @@ define([
             // Create some power ups
             this.powerUps = Utils.spawnPowerUps(this.game, this.game.gameConfig);
 
-            // Create some aliens
-            this.aliens = this.game.add.group();
-            Utils.spawnAliensInGame(this.game, this.aliens, this.game.gameConfig, this.stageConfig.numEnemies);
+            // Create some enemis
+            this.game.enemies = this.game.add.group();
+            Utils.spawnAliensInGame(this.game, this.game.enemies, this.game.gameConfig, this.stageConfig.numEnemies);
 
             // Initialise the Selection module
             this.selection = new Selection(this.game, this.game.playerCharacters);
             // Initialise the collisions module
-            this.collisions = new Collisions(this.game, this.aliens, this.game.playerCharacters, this.powerUps);
+            this.collisions = new Collisions(this.game, this.game.enemies, this.game.playerCharacters, this.powerUps);
             // Initialise the cursors
             this.cursors = this.game.input.keyboard.createCursorKeys();
         },
@@ -82,6 +86,22 @@ define([
             } else if (this.game.input.activePointer.position.y < 70) {
                 this.game.camera.y = this.game.camera.y - 12;
             }
+
+            // Check triggers
+            if (this.victoryTriggers) {
+                if (this.victoryTriggers.hasOwnProperty('numEnemies')) {
+                    if (this.game.enemies.countLiving() === this.victoryTriggers.numEnemies) {
+                        this.game.state.start(this.victoryTriggers.nextStage);
+                    }
+                }
+            }
+            if (this.defeatTriggers) {
+                if (this.defeatTriggers.hasOwnProperty('numPlayerCharacters')) {
+                    if (this.game.playerCharacters.countLiving() === this.defeatTriggers.numPlayerCharacters) {
+                        this.game.state.start(this.defeatTriggers.nextStage);
+                    }
+                }
+            }
         },
         render: function () {
             this.game.debug.text('FPS: ' + this.game.time.fps || '--', 12, 20, '#00ff00');
@@ -99,7 +119,7 @@ define([
             }, this);
 
             this.game.debug.text(
-                'Enemies: ' + this.aliens.countLiving() + ' / ' + this.aliens.length,
+                'Enemies: ' + this.game.enemies.countLiving() + ' / ' + this.game.enemies.length,
                 12,
                 newLineYPosition,
                 '#00ff00'

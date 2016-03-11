@@ -4,10 +4,12 @@
   "numEnemies": 10,
   "triggers": {
     "victory": {
-      "numEnemies": 0
+      "numEnemies": 0,
+      "nextStage": "StageOne"
     },
     "defeat": {
-      "numPlayerCharacters": 0
+      "numPlayerCharacters": 0,
+      "nextStage": "Boot"
     }
   }
 }

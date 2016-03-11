@@ -14,13 +14,7 @@ define([
         constructor: StageOne,
         preload: Phaser.BaseStage.prototype.preload,
         create: Phaser.BaseStage.prototype.create,
-        update: function () {
-            Phaser.BaseStage.prototype.update.call(this);
-
-            if (this.aliens.countLiving() === 0) {
-                this.game.state.start('StageTwo');
-            }
-        },
+        update: Phaser.BaseStage.prototype.update,
         render: Phaser.BaseStage.prototype.render
     };
 
