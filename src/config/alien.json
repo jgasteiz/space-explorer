@@ -1,0 +1,7 @@
+{
+  "characterName": "Alien",
+  "isSelectable": false,
+  "isEnemy": true,
+  "speed": 100,
+  "attackValue": 1
+}

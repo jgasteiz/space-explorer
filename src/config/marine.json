@@ -1,0 +1,9 @@
+{
+  "characterName": "Marine",
+  "fireDelay": 100,
+  "fireSpeed": 1000,
+  "isSelectable": true,
+  "isEnemy": false,
+  "speed": 160,
+  "strength": 0.4
+}

@@ -13,8 +13,8 @@ define([
      * @constructor
      */
     var Spaceship = function (game, x, y) {
-        Phaser.Character.call(this, game, x, y, 'battlecruiser');
-        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['spaceshipConfig']);
+        Phaser.Character.call(this, game, x, y, 'spaceship');
+        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('spaceship'));
 
         this.anchor.setTo(0.5, 0.4);
 

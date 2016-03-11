@@ -14,7 +14,7 @@ define([
      */
     var Alien = function (game, x, y) {
         Phaser.Character.call(this, game, x, y, 'alien');
-        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('config')['alienConfig']);
+        Phaser.Character.prototype.initializeConfig.call(this, game.cache.getJSON('alien'));
 
         // Easing for start/end of the movement tween - slower at the beginning and end.
         this.movementEasing = Phaser.Easing.Sinusoidal.InOut;

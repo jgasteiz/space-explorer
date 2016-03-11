@@ -1,10 +1,10 @@
 define([
     'Phaser',
-    'modules/Utils',
     'states/BaseStage'
-], function (Phaser, Utils) {
+], function (Phaser) {
 
     var StageOne = function (_game) {
+        this.stageName = 'stageOne';
         Phaser.BaseStage.call(this, _game);
     };
 
@@ -12,29 +12,10 @@ define([
 
     StageOne.prototype = {
         constructor: StageOne,
-        preload: function () {
-            Phaser.BaseStage.prototype.preload.call(this);
-            this.stageConfig = this.game.cache.getJSON('config')['stageConfig']['stageOne'];
-        },
-        create: function () {
-            Phaser.BaseStage.prototype.create.call(this);
-
-            // Spawn as many spaceships as it's specified in the config.
-            for (var i = 0; i < this.stageConfig.numSpaceships; i++) {
-                this.game.playerCharacters.add(new Phaser.Spaceship(this.game, 100 * i + 300, 200));
-            }
-            this.game.camera.focusOn(this.game.playerCharacters.getAt(0));
-        },
-        update: function () {
-            Phaser.BaseStage.prototype.update.call(this);
-
-            if (this.aliens.countLiving() === 0) {
-                this.game.state.start('StageTwo');
-            }
-        },
-        render: function () {
-            Phaser.BaseStage.prototype.render.call(this);
-        }
+        preload: Phaser.BaseStage.prototype.preload,
+        create: Phaser.BaseStage.prototype.create,
+        update: Phaser.BaseStage.prototype.update,
+        render: Phaser.BaseStage.prototype.render
     };
 
     return StageOne;
