@@ -1,6 +1,7 @@
 {
   "characterName": "Character",
   "speed": 200,
+  "minMovementDuration": 100,
   "maxHealth": 100,
   "health": 100,
   "attackValue": 6,

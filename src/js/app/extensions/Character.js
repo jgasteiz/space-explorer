@@ -216,7 +216,7 @@ define([
         this.movementTween = this.game.add.tween(this).to({
             x: x,
             y: y
-        }, Math.max(duration, 1000), this.movementEasing, true);
+        }, Math.max(duration, this.minMovementDuration), this.movementEasing, true);
 
         this.movementTween.onComplete.add(function() {
             this.onCompleteMovement();
