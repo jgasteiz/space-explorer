@@ -99,13 +99,6 @@ define([
     };
 
     /**
-     * Return the character name property.
-     */
-    Character.prototype.getCharacterName = function () {
-        return this.characterName;
-    };
-
-    /**
      * Initialise character properties from a config object.
      * @param characterConfig
      */
@@ -115,6 +108,13 @@ define([
                 this[prop] = characterConfig[prop];
             }
         }
+    };
+
+    /**
+     * Return the character name property.
+     */
+    Character.prototype.getCharacterName = function () {
+        return this.characterName;
     };
 
     /**
@@ -169,8 +169,7 @@ define([
      */
     Character.prototype.addHealth = function (extraHealth) {
         if (extraHealth > 0) {
-            var newHealth = Phaser.Math.min(this.getHealth() + extraHealth, this.maxHealth);
-            this.setHealth(newHealth);
+            this.setHealth(Phaser.Math.min(this.getHealth() + extraHealth, this.maxHealth));
         }
     };
 
@@ -290,18 +289,24 @@ define([
     /**
      * Function called when the movement animation is completed.
      */
-    Character.prototype.onCompleteMovement = function () {
-        // To be implemented
-    };
+    Character.prototype.onCompleteMovement = function () {};
 
     /**
      * Add damage to the character.
      * @param amount
      */
     Character.prototype.addDamage = function (amount) {
-        this.setHealth(this.getHealth() - amount / this.resistance);
-        this.receiveShot();
-        if (this.getHealth() < 1) {
+        this.setHealth(Phaser.Math.max(this.getHealth() - amount / this.resistance, 0));
+
+        var impact = this.game.add.sprite(
+            this.game.rnd.integerInRange(this.position.x - this.width / 2, this.position.x + this.width / 2),
+            this.game.rnd.integerInRange(this.position.y - this.height / 2, this.position.y + this.height / 2),
+            'impact');
+        impact.anchor.setTo(0.5);
+        impact.animations.add('impact');
+        impact.animations.play('impact', 20, false, true);
+
+        if (this.getHealth() === 0) {
             this.die();
         }
     };
@@ -336,19 +341,6 @@ define([
     };
 
     /**
-     * Play shot animation in the character.
-     */
-    Character.prototype.receiveShot = function () {
-        var impact = this.game.add.sprite(
-            this.game.rnd.integerInRange(this.position.x - this.width / 2, this.position.x + this.width / 2),
-            this.game.rnd.integerInRange(this.position.y - this.height / 2, this.position.y + this.height / 2),
-            'impact');
-        impact.anchor.setTo(0.5);
-        impact.animations.add('impact');
-        impact.animations.play('impact', 20, false, true);
-    };
-
-    /**
      * Character's update method.
      */
     Character.prototype.update = function () {
@@ -372,7 +364,7 @@ define([
     };
 
     /**
-     * Attack the active target, if there's any.
+     * Attack the active target, if there's any. Also stop moving.
      */
     Character.prototype.attackActiveTarget = function () {
         if (this.activeTarget) {
@@ -386,7 +378,7 @@ define([
     };
 
     /**
-     * Attack a given position
+     * Turn the character looking at a given x,y position.
      * @param x
      * @param y
      */
@@ -397,7 +389,8 @@ define([
         // Look at the target before attacking
         var newAngle = window.Math.atan2(y - this.position.y, x - this.position.x) + (window.Math.PI / 2);
         this.setFrameForRotation(newAngle, false);
-        // To be implemented
+
+        // The attack should be implemented by the child class.
     };
 
     /**
@@ -423,30 +416,6 @@ define([
             x: this.position.x + (Math.cos(newAngle) * this.width / 2),
             y: this.position.y - (Math.sin(newAngle) * this.height / 2)
         };
-    };
-
-    /**
-     * Return the x,y position of the tail of the sprite.
-     * @return {object} {x: float, y: float}
-     */
-    Character.prototype.getTailPosition = function () {
-        return this.getHeadPosition(this.rotation + Math.PI);
-    };
-
-    /**
-     * Return the x,y position of the tail of the sprite.
-     * @return {object} {x: float, y: float}
-     */
-    Character.prototype.getRightCenterPosition = function () {
-        return this.getHeadPosition(this.rotation + Math.PI / 2);
-    };
-
-    /**
-     * Return the x,y position of the tail of the sprite.
-     * @return {object} {x: float, y: float}
-     */
-    Character.prototype.getLeftCenterPosition = function () {
-        return this.getHeadPosition(this.rotation - Math.PI / 2);
     };
 
     Phaser.Character = Character;
