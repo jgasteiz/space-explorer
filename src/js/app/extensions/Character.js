@@ -66,10 +66,10 @@ define([
                     this.selectCharacter();
                     this.game.selectedUnits = [this];
                 }
-            } else if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+
                 // If the character is an enemy and there are any selected
                 // units, set clicked character as active target.
-                if (this.isEnemy && this.game.selectedUnits.length > 0) {
+                else if (this.isEnemy && this.game.selectedUnits.length > 0) {
                     this.game.selectedUnits.forEach(function (character) {
                         character.setActiveTarget(this);
                     }, this);
@@ -80,7 +80,7 @@ define([
         // Move to the clicked position if the chaacter is alive and selected.
         // If the scenario is clicked, go to the clicked position.
         this.game.starfield.events.onInputDown.add(function (sprite, pointer) {
-            if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
+            if (pointer.button === Phaser.Mouse.LEFT_BUTTON) {
                 if (!this.isSelected) {
                     return;
                 }
