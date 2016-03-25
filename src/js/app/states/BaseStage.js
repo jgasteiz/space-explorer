@@ -52,6 +52,10 @@ define([
             this.collisions = new Collisions(this.game, this.game.enemies, this.game.playerCharacters, this.powerUps);
             // Initialise the cursors
             this.cursors = this.game.input.keyboard.createCursorKeys();
+            this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+            this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+            this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+            this.game.input.keyboard.addKey(Phaser.Keyboard.D);
         },
         update: function () {
             if (!this.game.playerCharacters) {
@@ -65,14 +69,14 @@ define([
             this.collisions.update();
 
             // Move the camera
-            if (this.cursors.up.isDown) {
+            if (this.cursors.up.isDown || this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
                 this.game.camera.y -= 12;
-            } else if (this.cursors.down.isDown) {
+            } else if (this.cursors.down.isDown || this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
                 this.game.camera.y += 12;
             }
-            if (this.cursors.left.isDown) {
+            if (this.cursors.left.isDown || this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
                 this.game.camera.x -= 12;
-            } else if (this.cursors.right.isDown) {
+            } else if (this.cursors.right.isDown || this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
                 this.game.camera.x += 12;
             }
 
