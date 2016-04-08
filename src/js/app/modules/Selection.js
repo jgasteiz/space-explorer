@@ -7,13 +7,17 @@ define(['Phaser'], function (Phaser) {
             if (pointer.button === Phaser.Mouse.RIGHT_BUTTON) {
                 return;
             }
+            playerCharacters.forEach(function(spaceship) {
+                spaceship.deselectCharacter();
+            }, this);
+            game.selectedUnits = [];
 
             isSelecting = true;
 
             var bmd = game.add.bitmapData(1, 1);
             bmd.ctx.beginPath();
             bmd.ctx.rect(0, 0, 1, 1);
-            bmd.ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+            bmd.ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
             bmd.ctx.fill();
             rectangle = game.add.sprite(pointer.worldX, pointer.worldY, bmd);
             game.physics.arcade.enable(this);
@@ -22,13 +26,6 @@ define(['Phaser'], function (Phaser) {
 
         game.input.addMoveCallback(function (pointer) {
             if (isSelecting) {
-
-                // Deselect everything
-                playerCharacters.forEach(function(spaceship) {
-                    spaceship.deselectCharacter();
-                }, this);
-                game.selectedUnits = [];
-
                 rectangle.width = pointer.worldX - rectangle.position.x;
                 rectangle.height = pointer.worldY - rectangle.position.y;
             }
