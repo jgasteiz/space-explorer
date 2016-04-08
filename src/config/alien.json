@@ -3,5 +3,6 @@
   "isSelectable": false,
   "isEnemy": true,
   "speed": 100,
+  "minMovementDuration": 1000,
   "attackValue": 1
 }

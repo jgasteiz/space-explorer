@@ -5,5 +5,6 @@
   "isSelectable": true,
   "isEnemy": false,
   "speed": 160,
+  "minMovementDuration": 100,
   "strength": 0.4
 }
